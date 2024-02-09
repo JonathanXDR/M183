@@ -20,6 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `m183_lb2`
 --
+CREATE Database m183_lb2;
 
 -- --------------------------------------------------------
 
@@ -129,3 +130,13 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+insert into roles (ID, title) values (2, 'User');
+insert into roles (ID, title) values (1, 'Admin');
+
+
+insert into users (ID, username, password) values (1, 'admin1', 'Awesome.Pass34');
+insert into users (ID, username, password) values (2, 'user1', 'Amazing.Pass23');
+
+insert into permissions(ID, userID, roleID) values(null, 1, 1);
+insert into permissions(ID, userID, roleID) values(null, 2, 2);
