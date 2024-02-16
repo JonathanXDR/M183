@@ -42,7 +42,7 @@ CREATE TABLE `permissions` (
 
 CREATE TABLE `roles` (
   `ID` bigint(20) NOT NULL,
-  `title` int(11) NOT NULL
+  `title` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
@@ -106,12 +106,6 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für Tabelle `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `roles`
---
-ALTER TABLE `roles`
   MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --

@@ -1,8 +1,7 @@
 <?php
-session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_COOKIE['username'])) {
     header("Location: login.php");
     exit();
 }
@@ -16,6 +15,6 @@ if (!isset($_SESSION['username'])) {
     <title>Welcome</title>
 </head>
 <body>
-<h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
+<h2>Welcome, <?php echo $_COOKIE['username']; ?>!</h2>
 </body>
 </html>
