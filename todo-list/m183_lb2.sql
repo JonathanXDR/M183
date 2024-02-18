@@ -53,7 +53,7 @@ CREATE TABLE `roles` (
 
 CREATE TABLE `tasks` (
   `ID` bigint(20) NOT NULL,
-  `title` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `userID` bigint(20) NOT NULL,
   `state` enum('open','in progress','done') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;

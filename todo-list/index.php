@@ -5,16 +5,19 @@ if (!isset($_COOKIE['username'])) {
     header("Location: login.php");
     exit();
 }
+
+require_once 'fw/header.php';
+?>
+<h2>Welcome, <?php echo $_COOKIE['username']; ?>!</h2>
+
+
+<?php 
+    if (isset($_COOKIE['userid'])) {
+        require_once 'user/tasklist.php';
+    }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-</head>
-<body>
-<h2>Welcome, <?php echo $_COOKIE['username']; ?>!</h2>
-</body>
-</html>
+
+<?php
+    require_once 'fw/footer.php';
+?>

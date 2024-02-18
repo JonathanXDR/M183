@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
         die("Connection failed: " . $conn->connect_error);
     }
     // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("SELECT username, password FROM users WHERE username='$username'");
+    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username='$username'");
 
     // Execute the statement
     $stmt->execute();
@@ -24,13 +24,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
     // Check if username exists
     if ($stmt->num_rows > 0) {
         // Bind the result variables
-        $stmt->bind_result($db_username, $db_password);
+        $stmt->bind_result($db_id, $db_username, $db_password);
         // Fetch the result
         $stmt->fetch();
         // Verify the password
         if ($password == $db_password) {
             // Password is correct, store username in session
             setcookie("username", $username, -1, "/"); // 86400 = 1 day
+            setcookie("userid", $db_id, -1, "/"); // 86400 = 1 day
             // Redirect to index.php
             header("Location: index.php");
             exit();

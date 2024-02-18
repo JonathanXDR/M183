@@ -23,8 +23,8 @@
 <table>
     <tr>
         <th>ID</th>
-        <th>Benutzername</th>
-        <th>Rolle</th>
+        <th>Username</th>
+        <th>Role</th>
     </tr>
     <?php
         // Fetch the result
