@@ -14,6 +14,8 @@ require_once 'fw/header.php';
 <?php 
     if (isset($_COOKIE['userid'])) {
         require_once 'user/tasklist.php';
+        echo "<hr />";
+        require_once 'user/backgroundsearch.php';
     }
 ?>
 

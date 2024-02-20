@@ -33,8 +33,8 @@
         <?php while ($stmt->fetch()) { ?>
             <tr>
                 <td><?php echo $db_id ?></td>
-                <td><?php echo $db_title ?></td>
-                <td><?php echo $db_state ?></td>
+                <td class="wide"><?php echo $db_title ?></td>
+                <td><?php echo ucfirst($db_state) ?></td>
                 <td>
                     <a href="edit.php?id=<?php echo $db_id ?>">edit</a> | <a href="delete.php?id=<?php echo $db_id ?>">delete</a>
                 </td>

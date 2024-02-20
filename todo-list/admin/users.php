@@ -19,7 +19,11 @@
     $stmt->store_result();
     // Bind the result variables
     $stmt->bind_result($db_id, $db_username, $db_password, $db_title);
+
+    require_once '../fw/header.php';
 ?>
+<h2>User List</h2>
+
 <table>
     <tr>
         <th>ID</th>
@@ -33,3 +37,7 @@
         }
     ?>
 </table>
+
+<?php
+    require_once '../fw/footer.php';
+?>
