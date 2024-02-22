@@ -1,6 +1,4 @@
-# LB1: OWASP Top Ten Project
-
-(Gruppenarbeit)
+# LB1: OWASP Top Ten Project (Gruppenarbeit)
 
 ## Rahmenbedingungen
 
@@ -50,4 +48,35 @@ Als Vorbereitung stehen 7 Lektionen während der Schule zur Verfügung. Die Vo
 
 ## Termine, Abgabe und Bewertung
 
-Die konkreten Termine und Abgabemodalitäten werden durch die Lehrperson für jede Moduldurchführung individuell festgelegt und entsprechend kommuniziert. Es gilt für die Bewertung folgendes Bewertungsraster:
+Die konkreten Termine und Abgabemodalitäten werden durch die Lehrperson für jede Moduldurchführung individuell festgelegt und entsprechend kommuniziert.
+
+Es gilt für die Bewertung folgendes Bewertungsraster:
+
+| Präsentation                                                           | Bemerkungen | Beurteilung |
+| ---------------------------------------------------------------------- | ----------- | ----------- |
+| Einführung, Ablauf                                                     |             |             |
+| Arbeit wird verständlich vorgestellt                                   |             |             |
+| Sicherheitsprobleme gut erklärt                                        |             |             |
+| interessant und lehrreich                                              |             |             |
+| Regeln der Präsentation eingehalten                                    |             |             |
+| Kompetenz ist erkennbar                                                |             |             |
+| **Inhalt der Gruppenarbeit**                                           |             |             |
+| Überblick                                                              |             |             |
+| Auftrag 3 (Beschreibung von CWE)                                       |             |             |
+| Auftrag 4 (OWASP Risk vs Proactive Controls)                           |             |             |
+| Beschreibung der theoretischen Hintergründe                            |             |             |
+| Beschreibung des Demo-Codes (der Demo Applikation bzw. des Demo Setup) |             |             |
+| Massnahmen zur Verbesserung                                            |             |             |
+| Erkenntnisse, Empfehlungen                                             |             |             |
+| Quellen                                                                |             |             |
+| **Allgemeiner Eindruck**                                               |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
+|                                                                        |             |             |
