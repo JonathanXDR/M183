@@ -70,13 +70,3 @@ Es gilt für die Bewertung folgendes Bewertungsraster:
 | Erkenntnisse, Empfehlungen                                             |             |             |
 | Quellen                                                                |             |             |
 | **Allgemeiner Eindruck**                                               |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
-|                                                                        |             |             |
