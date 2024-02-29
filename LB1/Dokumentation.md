@@ -1,21 +1,72 @@
-# LB1: OWASP Top Ten Project (Gruppenarbeit)
+# LB1: OWASP Top Ten Project - A09:2021 Security Logging and Monitoring Failures
 
-### 1. Analyse von A09:2021 – Security Logging and Monitoring Failures
+## Überblick
 
-#### Überblick
+In dieser Gruppenarbeit befassen wir uns mit dem Thema "A09:2021 – Security Logging and Monitoring Failures" aus den OWASP Top Ten 2021. Dieser Punkt fokussiert sich auf die Schwachstellen, die entstehen, wenn unzureichendes Logging und Monitoring von Sicherheitsereignissen implementiert werden. Diese Lücken ermöglichen es Angreifern oft, Angriffe durchzuführen, ohne entdeckt zu werden.
 
-Security Logging und Monitoring Failures beziehen sich auf Mängel in den Protokollierungs- und Überwachungsmechanismen von Anwendungen, die es Angreifern ermöglichen, Sicherheitsverletzungen zu verursachen oder bestehende Sicherheitslücken auszunutzen, ohne entdeckt zu werden. Dies kann durch unzureichende Protokollierung von Sicherheitsereignissen, fehlende oder ineffektive Überwachungssysteme oder fehlerhafte Alarmierung im Falle einer Sicherheitsverletzung verursacht werden.
+## Erläuterungen zu Aufgabe 3 und 4
 
-#### Theoretische Hintergründe und mögliche Folgen
+### CWE & OWASP Top 10 Risks Zusammenhang
 
-Eine unzureichende Protokollierung und Überwachung ermöglicht es Angreifern, längere Zeit unbemerkt zu bleiben, was ihnen die Möglichkeit gibt, weitere Angriffe durchzuführen, Daten zu exfiltrieren oder Systeme zu manipulieren. Die Folgen können schwerwiegend sein, einschließlich Datenverlust, Datenschutzverletzungen, Reputationsverlust und finanzielle Verluste.
+CWE steht für "Common Weakness Enumeration" und ist eine Liste von Software- und Hardware-Schwachstellen. CWE hilft bei der Identifikation und Klassifikation von Sicherheitslücken. Die OWASP Top Ten sind eng mit CWE verknüpft, da sie auf CWE-Einträgen basieren und die kritischsten Webanwendungssicherheitsrisiken hervorheben.
 
-### 2. CWE – Common Weakness Enumeration
+### Unterschied zwischen OWASP Top 10 Risks und OWASP Proactive Controls
 
-CWE steht für "Common Weakness Enumeration" und ist eine Liste von bekannten Software- und Hardware-Schwachstellen. CWE bietet eine standardisierte Identifikation und Klassifizierung von Sicherheitsschwachstellen in Anwendungen und Systemen. Der Zusammenhang zwischen CWE und den OWASP Top 10 besteht darin, dass die OWASP Top 10 viele Schwachstellen aufgreifen, die in der CWE-Liste kategorisiert sind. Die OWASP Top 10 dienen als Leitfaden zur Identifizierung der kritischsten Webanwendungssicherheitsrisiken, während CWE ein umfassendes Verzeichnis von Schwachstellen bietet, das über die Webanwendungssicherheit hinausgeht.
+Die "OWASP Top 10 Risks" listen die zehn kritischsten Sicherheitsrisiken für Webanwendungen auf, basierend auf ihrer Verbreitung und ihren potenziellen Auswirkungen. "OWASP Proactive Controls" hingegen sind eine Reihe von Sicherheitsmassnahmen, die Entwickler während des Softwareentwicklungsprozesses ergreifen sollten, um Sicherheitsrisiken proaktiv zu vermeiden.
 
-### 3. Unterschied zwischen OWASP Top 10 Risiken und OWASP Proactive Controls
+## Theoretische Hintergründe
 
-Die "OWASP Top 10 Risiken" sind eine Liste, die die zehn kritischsten Sicherheitsrisiken für Webanwendungen zusammenfasst. Sie zielt darauf ab, Organisationen und Entwicklern Bewusstsein für die wichtigsten Sicherheitsbedrohungen zu vermitteln.
+### Beschreibung der Bedrohung
 
-Die "OWASP Proactive Controls" hingegen sind eine Liste von Sicherheitsempfehlungen und besten Praktiken, die Entwickler bereits während der Entwicklung von Anwendungen implementieren sollten, um Sicherheitsrisiken zu minimieren. Sie bieten praktische Anleitungen zur sicheren Softwareentwicklung und konzentrieren sich auf vorbeugende Maßnahmen, anstatt auf die Reaktion auf Angriffe.
+Security Logging und Monitoring sind essentielle Bestandteile einer robusten Sicherheitsstrategie. Sie ermöglichen die Erkennung, Untersuchung und Reaktion auf Sicherheitsvorfälle. Ein Mangel daran führt dazu, dass Angriffe unbemerkt bleiben, Beweismittel nicht gesichert werden und somit die Möglichkeit zur Nachverfolgung und Analyse von Angriffen verloren geht. Die Folgen können Datenverlust, Systemkompromittierung und rechtliche sowie finanzielle Nachteile sein.
+
+## Schwachstelle mit Codebeispiel
+
+Ein typisches Beispiel für eine Schwachstelle in diesem Bereich ist das Fehlen von angemessenen Logging-Mechanismen für fehlgeschlagene Anmeldeversuche. Ohne diese Logs ist es unmöglich zu erkennen, ob ein Angreifer versucht, ein Passwort durch Brute-Force-Methoden zu erraten.
+
+```javascript
+// Unzureichendes Logging bei fehlgeschlagenen Anmeldeversuchen
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!authenticate(username, password)) {
+    // Schwachstelle: Fehlgeschlagener Anmeldeversuch wird nicht geloggt
+    res.status(401).send('Login failed');
+  } else {
+    // Erfolgreiche Anmeldung
+    res.status(200).send('Login successful');
+  }
+});
+```
+
+## Massnahme mit Codebeispiel
+
+Um die Schwachstelle zu beheben, sollte das System jeden fehlgeschlagenen Anmeldeversuch, einschliesslich Zeitstempel und IP-Adresse des Benutzers, loggen. Dies ermöglicht die Identifikation und Analyse verdächtiger Aktivitäten.
+
+```javascript
+// Verbessertes Logging für fehlgeschlagene Anmeldeversuche
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!authenticate(username, password)) {
+    // Verbesserung: Fehlgeschlagener Anmeldeversuch wird geloggt
+    console.error(
+      `Failed login attempt for ${username} from ${
+        req.ip
+      } at ${new Date().toISOString()}`
+    );
+    res.status(401).send('Login failed');
+  } else {
+    // Erfolgreiche Anmeldung
+    res.status(200).send('Login successful');
+  }
+});
+```
+
+## Resultate & Erkenntnisse
+
+Durch die Implementierung von effektivem Logging und Monitoring können Sicherheitsvorfälle schneller erkannt und behoben werden. Dies erhöht nicht nur die Sicherheit der Anwendung, sondern unterstützt auch die Einhaltung von Compliance-Anforderungen.
+
+## Hinweise auf weitere Unterlagen & Übungen
+
+- OWASP Top Ten 2021: <https://owasp.org/Top10/>
+- CWE - Common Weakness Enumeration: <https://cwe.mitre.org/>
+- OWASP Proactive Controls: <https://owasp.orgwww-project-proactive-controls/>
