@@ -12,13 +12,13 @@
         die("Connection failed: " . $conn->connect_error);
     }
     // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("SELECT users.ID, users.username, users.password, roles.title FROM users inner join permissions on users.ID = permissions.userID inner join roles on permissions.roleID = roles.ID order by username");
+    $stmtU = $conn->prepare("SELECT users.ID, users.username, users.password, roles.title FROM users inner join permissions on users.ID = permissions.userID inner join roles on permissions.roleID = roles.ID order by username");
     // Execute the statement
-    $stmt->execute();
+    $stmtU->execute();
     // Store the result
-    $stmt->store_result();
+    $stmtU->store_result();
     // Bind the result variables
-    $stmt->bind_result($db_id, $db_username, $db_password, $db_title);
+    $stmtU->bind_result($db_id, $db_username, $db_password, $db_title);
 
     require_once '../fw/header.php';
 ?>
@@ -32,7 +32,7 @@
     </tr>
     <?php
         // Fetch the result
-        while ($stmt->fetch()) {
+        while ($stmtU->fetch()) {
             echo "<tr><td>$db_id</td><td>$db_username</td><td>$db_title</td><input type='hidden' name='password' value='$db_password' /></tr>";
         }
     ?>
