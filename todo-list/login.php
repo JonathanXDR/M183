@@ -1,27 +1,25 @@
 <?php
 require_once 'config.php';
 
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset ($_GET['username']) && isset ($_GET['password'])) {
-    // Get username and password from the form
-    $username = $_GET['username'];
-    $password = $_GET['password'];
-
-    // Connect to the database
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($_POST['password'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     // Check connection
     if ($conn->connect_error) {
-        die ("Connection failed: " . $conn->connect_error);
+        die("Connection failed: " . $conn->connect_error);
     }
-    // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username='$username'");
+    try {
+        $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username=?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->store_result();
+    } catch (Exception $e) {
+        $error = "Error: " . $e->getMessage();
+        exit();
+    }
 
-    // Execute the statement
-    $stmt->execute();
-    // Store the result
-    $stmt->store_result();
-    // Check if username exists
     if ($stmt->num_rows > 0) {
         // Bind the result variables
         $stmt->bind_result($db_id, $db_username, $db_password);
@@ -52,6 +50,11 @@ require_once 'fw/header.php';
 
 <h2>Login</h2>
 
+<?php if (isset($error)) : ?>
+    <p>
+        <?php echo $error; ?>
+    </p>
+<?php endif; ?>
 
 <form id="form" method="get" action="<?php $_SERVER["PHP_SELF"]; ?>">
     <div class="form-group">
