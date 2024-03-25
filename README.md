@@ -16,3 +16,4 @@ Bevor mit `docker compose up` die Applikation gestartet wird, muss der Source-Pf
   - [login.php](/todo-list/login.php) Line 14
 - ### `Fixxed` Database Error
   - When an error occurs during database operations, the script dies with an error message containing sensitive information like the database connection error.
+- ### Cross-Site Scripting (XSS)
