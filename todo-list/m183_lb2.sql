@@ -1,136 +1,73 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+-- -------------------------------------------------------------
+-- TablePlus 5.9.0(538)
 --
--- Host: localhost:3306
--- Erstellungszeit: 08. Feb 2024 um 18:09
--- Server-Version: 10.6.15-MariaDB
--- PHP-Version: 8.2.14
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- https://tableplus.com/
+--
+-- Database: m183_lb2
+-- Generation Time: 2024-03-25 14:13:24.5920
+-- -------------------------------------------------------------
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Datenbank: `m183_lb2`
---
-CREATE Database m183_lb2;
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `permissions`
---
-
+DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE `permissions` (
-  `ID` bigint(20) NOT NULL,
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `userID` bigint(20) NOT NULL,
-  `roleID` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+  `roleID` bigint(20) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `roles`
---
-
+DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `ID` bigint(20) NOT NULL,
-  `title` varchar(255) NOT NULL
+  `title` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `tasks`
---
-
+DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE `tasks` (
-  `ID` bigint(20) NOT NULL,
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `userID` bigint(20) NOT NULL,
-  `state` enum('open','in progress','done') NOT NULL
+  `state` enum('open','in progress','done') NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `users`
---
-
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `ID` bigint(20) NOT NULL,
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
---
--- Indizes der exportierten Tabellen
---
+INSERT INTO `permissions` (`ID`, `userID`, `roleID`) VALUES
+(1, 1, 1),
+(2, 2, 2);
 
---
--- Indizes für die Tabelle `permissions`
---
-ALTER TABLE `permissions`
-  ADD PRIMARY KEY (`ID`);
+INSERT INTO `roles` (`ID`, `title`) VALUES
+(1, 'Admin'),
+(2, 'User');
 
---
--- Indizes für die Tabelle `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`ID`);
+INSERT INTO `users` (`ID`, `username`, `password`) VALUES
+(1, 'admin1', 'Awesome.Pass34'),
+(2, 'user1', 'Amazing.Pass23');
 
---
--- Indizes für die Tabelle `tasks`
---
-ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`ID`);
 
---
--- Indizes für die Tabelle `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`ID`);
 
---
--- AUTO_INCREMENT für exportierte Tabellen
---
-
---
--- AUTO_INCREMENT für Tabelle `permissions`
---
-ALTER TABLE `permissions`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `tasks`
---
-ALTER TABLE `tasks`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `users`
---
-ALTER TABLE `users`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
-COMMIT;
-
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-insert into roles (ID, title) values (2, 'User');
-insert into roles (ID, title) values (1, 'Admin');
-
-
-insert into users (ID, username, password) values (1, 'admin1', 'Awesome.Pass34');
-insert into users (ID, username, password) values (2, 'user1', 'Amazing.Pass23');
-
-insert into permissions(ID, userID, roleID) values(null, 1, 1);
-insert into permissions(ID, userID, roleID) values(null, 2, 2);
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
