@@ -12,3 +12,5 @@ Bevor mit `docker compose up` die Applikation gestartet wird, muss der Source-Pf
 
 - ### Cleartext passwords:
   - The passwords in the database are not hashed.
+- ### SQL Injection:
+  - [login.php](/todo-list/login.php) Line 14
