@@ -17,5 +17,5 @@ services:
       - '80:80'
     volumes:
       - type: bind
-        source: /Users/jonathan/Developer/Git/TBZ/M183/todo-list
+        source: /Users/jonathan/Developer/Git/TBZ/M183
         target: /var/www/html
