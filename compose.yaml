@@ -30,6 +30,9 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=true
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - ELASTIC_PASSWORD=elastic
     ports:
       - '9200:9200'
     volumes:
@@ -37,6 +40,11 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.12.2
+    environment:
+      - SERVER_NAME=kibana.example.org
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=+NaF+Di3DOetiitU_-=6
     ports:
       - '5601:5601'
     depends_on:
@@ -50,6 +58,10 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     depends_on:
       - elasticsearch
+    environment:
+      - XPACK_MONITORING_ENABLED=true
+      - XPACK_MONITORING_ELASTICSEARCH_USERNAME=elastic
+      - XPACK_MONITORING_ELASTICSEARCH_PASSWORD=elastic
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.12.2
