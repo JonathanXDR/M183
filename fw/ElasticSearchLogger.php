@@ -1,7 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 
-use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\ClientBuilder;
 
 class ElasticSearchLogger
 {
