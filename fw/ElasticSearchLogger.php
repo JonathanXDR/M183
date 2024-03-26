@@ -9,7 +9,10 @@ class ElasticSearchLogger
 
     public function __construct()
     {
-        $this->client = ClientBuilder::create()->setHosts(['localhost:9200'])->build();
+        $this->client = ClientBuilder::create()
+            ->setHosts(['elasticsearch:9200'])
+            ->setBasicAuthentication('elastic', 'elastic')
+            ->build();
     }
 
     public function log($level, $message, $context = [])
@@ -26,3 +29,4 @@ class ElasticSearchLogger
         $this->client->index($data);
     }
 }
+?>
