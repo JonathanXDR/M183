@@ -1,7 +1,7 @@
 <?php
 $id = 0;
 $roleid = 0;
-require_once 'fw/db.php';
+require_once 'db.php';
 if (isset ($_COOKIE['userid'])) {
     $id = $_COOKIE['userid'];
     $stmt = executeStatement("select users.id userid, roles.id roleid, roles.title rolename from users inner join permissions on users.id = permissions.userid inner join roles on permissions.roleID = roles.id where userid = $id");
