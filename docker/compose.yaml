@@ -52,6 +52,20 @@ services:
     depends_on:
       - elasticsearch
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.12.2
+    volumes:
+      - type: bind
+        source: ./filebeat/filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+        read_only: true
+      - type: bind
+        source: ./todo-list
+        target: /var/log/myapp
+    command: filebeat -e -strict.perms=false
+    depends_on:
+      - logstash
+
 volumes:
   mariadb_data:
   es_data:
