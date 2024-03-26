@@ -19,3 +19,11 @@ services:
       - type: bind
         source: /Users/jonathan/Developer/Git/TBZ/M183/todo-list
         target: /var/www/html
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    environment:
+      - discovery.type=single-node
+
