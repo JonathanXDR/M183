@@ -22,7 +22,7 @@ services:
       - '80:80'
     volumes:
       - type: bind
-        source: /Users/jonathan/Developer/Git/TBZ/M183/todo-list
+        source: /Users/jonathan/Developer/Git/TBZ/M183
         target: /var/www/html
       - php_logs:/var/log/php
 
@@ -47,7 +47,6 @@ services:
     ports:
       - '5044:5044'
     volumes:
-      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     depends_on:
       - elasticsearch
