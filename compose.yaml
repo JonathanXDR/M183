@@ -14,16 +14,12 @@ services:
   web:
     build: .
     container_name: m183-lb2-web
-    environment:
-      - DBSERVER=m183-lb2-db
     depends_on:
       - db
     ports:
       - '80:80'
     volumes:
-      - type: bind
-        source: /Users/jonathan/Developer/Git/TBZ/M183
-        target: /var/www/html
+      - .:/var/www/html
       - php_logs:/var/log/php
 
   elasticsearch:
