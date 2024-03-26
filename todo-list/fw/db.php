@@ -1,8 +1,13 @@
 <?php
 
+require_once 'ElasticSearchLogger.php';
+
 function executeStatement($statement)
 {
     $conn = getConnection();
+    if (!$conn) {
+        return false;
+    }
     $stmt = $conn->prepare($statement);
     $stmt->execute();
     $stmt->store_result();
@@ -18,6 +23,8 @@ function getConnection()
 
     // Check connection
     if ($conn->connect_error) {
+        $logger = new ElasticSearchLogger();
+        $logger->log('error', 'Database connection failed', ['error' => $conn->connect_error]);
         die ("Connection failed: " . $conn->connect_error);
     }
 
