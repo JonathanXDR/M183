@@ -1,5 +1,8 @@
 <?php
 require_once 'config.php';
+require_once 'fw/ElasticSearchLogger.php';
+
+$logger = new ElasticSearchLogger();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($_POST['password'])) {
     $username = $_POST['username'];
@@ -17,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($
         $stmt->store_result();
     } catch (Exception $e) {
         $error = "Error: " . $e->getMessage();
+        $logger->log('error', 'SQL execution error', ['error' => $error]);
         exit();
     }
 
@@ -31,15 +35,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($
             setcookie("username", $username, -1, "/"); // 86400 = 1 day
             setcookie("userid", $db_id, -1, "/"); // 86400 = 1 day
             // Redirect to index.php
+            $logger->log('info', 'User logged in successfully', ['username' => $username]);
             header("Location: index.php");
             exit();
         } else {
             // Password is incorrect
             echo "Incorrect password";
+            $logger->log('warning', 'User failed to log in', ['username' => $username, 'reason' => 'Incorrect password']);
         }
     } else {
         // Username does not exist
         echo "Username does not exist";
+        $logger->log('warning', 'Failed login attempt', ['username' => $username, 'reason' => 'Username does not exist']);
     }
 
     // Close statement
