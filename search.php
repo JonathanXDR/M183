@@ -1,6 +1,10 @@
 <?php
 
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+
 if (!isset ($_POST["provider"]) || !isset ($_POST["terms"]) || !isset ($_POST["userid"])) {
+   $logger->log('WARN', 'Search attempted with insufficient information.');
    exit ("Not enough information provided");
 }
 
@@ -9,6 +13,8 @@ $terms = $_POST["terms"];
 $userid = $_POST["userid"];
 
 sleep(1); // this is a long, long search!!
+
+$logger->log('INFO', "Search performed by user $userid: $terms", ['provider' => $provider]);
 
 function callAPI($method, $url, $data)
 {

@@ -4,12 +4,27 @@ require_once 'ElasticSearchLogger.php';
 
 function executeStatement($statement)
 {
+    $logger = new ElasticSearchLogger();
     $conn = getConnection();
+
     if (!$conn) {
+        $logger->log('ERROR', 'Failed to obtain database connection.');
         return false;
     }
+
     $stmt = $conn->prepare($statement);
-    $stmt->execute();
+
+    if (!$stmt) {
+        $logger->log('ERROR', 'Failed to prepare statement', ['statement' => $statement, 'error' => $conn->error]);
+        return false;
+    }
+
+    if ($stmt->execute()) {
+        $logger->log('INFO', 'Statement executed successfully', ['statement' => $statement]);
+    } else {
+        $logger->log('ERROR', 'Statement execution failed', ['statement' => $statement, 'error' => $stmt->error]);
+    }
+
     $stmt->store_result();
     return $stmt;
 }
@@ -24,7 +39,7 @@ function getConnection()
     // Check connection
     if ($conn->connect_error) {
         $logger = new ElasticSearchLogger();
-        $logger->log('error', 'Database connection failed', ['error' => $conn->connect_error]);
+        $logger->log('ERROR', 'Database connection error', ['error' => $conn->connect_error]);
         die ("Connection failed: " . $conn->connect_error);
     }
 

@@ -1,12 +1,15 @@
 <?php
-// Check if the user is logged in
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+
 if (!isset ($_COOKIE['userid'])) {
+  $logger->log('WARN', 'Unauthorized attempt to save a task.');
   header("Location: /");
   exit();
 }
+
 $id = "";
 include 'fw/db.php';
-// see if the id exists in the database
 
 if (isset ($_POST['id']) && strlen($_POST['id']) != 0) {
   $id = $_POST["id"];
@@ -23,13 +26,16 @@ if (isset ($_POST['title']) && isset ($_POST['state'])) {
   $userid = $_COOKIE['userid'];
 
   if ($id == "") {
+    $logger->log('INFO', "New task created by user $userid: $title");
     $stmt = executeStatement("insert into tasks (title, state, userID) values ('$title', '$state', '$userid')");
   } else {
+    $logger->log('INFO', "Task $id updated by user $userid.");
     $stmt = executeStatement("update tasks set title = '$title', state = '$state' where ID = $id");
   }
 
-  echo "<span class='info info-success'>Update successfull</span>";
+  echo "<span class='info info-success'>Update successful</span>";
 } else {
+  $logger->log('ERROR', "Task update failed by user $userid: Missing title or state.");
   echo "<span class='info info-error'>No update was made</span>";
 }
 

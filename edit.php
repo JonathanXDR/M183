@@ -5,9 +5,10 @@ if (!isset ($_COOKIE['userid'])) {
   exit();
 }
 
-$options = array("Open", "In Progress", "Done");
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
 
-// read task if possible
+$options = array("Open", "In Progress", "Done");
 $title = "";
 $state = "";
 $taskid = "";
@@ -16,6 +17,9 @@ if (isset ($_GET['id'])) {
   $taskid = $_GET["id"];
   require_once 'fw/db.php';
   $stmt = executeStatement("select ID, title, state from tasks where ID = $taskid");
+
+  $logger->log('INFO', 'Fetching task for editing', ['task_id' => $taskid]);
+
   if ($stmt->num_rows > 0) {
     $stmt->bind_result($db_id, $db_title, $db_state);
     $stmt->fetch();

@@ -8,9 +8,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset ($_GET['username']) && isset ($
     $username = $_GET['username'];
     $password = $_GET['password'];
 
+    $logger->log('INFO', 'Login attempt', ['username' => $username]);
+
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     if ($conn->connect_error) {
+        $logger->log('ERROR', 'Database connection failed', ['error' => $conn->connect_error]);
         die ("Connection failed: " . $conn->connect_error);
     }
 
@@ -24,17 +27,18 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset ($_GET['username']) && isset ($
         $stmt->fetch();
 
         if ($password == $db_password) {
-            setcookie("username", $username, -1, "/");
-            setcookie("userid", $db_id, -1, "/");
+            setcookie("username", $username, time() + (86400 * 30), "/");
+            setcookie("userid", $db_id, time() + (86400 * 30), "/");
+            $logger->log('INFO', 'Login successful', ['username' => $username]);
             header("Location: index.php");
             exit();
         } else {
             echo "Incorrect password";
-            $logger->log("ERROR", "Incorrect password attempt for user: $username");
+            $logger->log('ERROR', 'Incorrect password attempt', ['username' => $username]);
         }
     } else {
         echo "Username does not exist";
-        $logger->log("WARN", "Login attempt for non-existent user: $username");
+        $logger->log('WARN', 'Login attempt for non-existent user', ['username' => $username]);
     }
 
     $stmt->close();

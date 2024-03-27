@@ -1,16 +1,23 @@
 <?php
+require_once '../config.php';
+require_once '../fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+
 if (!isset ($_COOKIE['username'])) {
+    $logger->log('WARN', 'Unauthorized task list access attempt', ['cookie' => $_COOKIE]);
     header("Location: ../login.php");
     exit();
 }
-require_once 'config.php';
+
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$userid = $_COOKIE['userid'];
+
+$logger->log('INFO', 'Task list viewed', ['userid' => $userid]);
 
 // Check connection
 if ($conn->connect_error) {
     die ("Connection failed: " . $conn->connect_error);
 }
-$userid = $_COOKIE['userid'];
 
 // Prepare SQL statement to retrieve user from database
 $stmt = $conn->prepare("select ID, title, state from tasks where UserID = $userid");

@@ -1,10 +1,16 @@
 <?php
+require_once '../fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+
 if (!isset ($_COOKIE['username'])) {
+    $logger->log('WARN', 'Unauthorized background search attempt', ['cookie' => $_COOKIE]);
     header("Location: ../login.php");
     exit();
 }
 
-require_once 'fw/db.php';
+$logger->log('INFO', 'Background search page accessed', ['username' => $_COOKIE['username']]);
+
+require_once '../fw/db.php';
 ?>
 <section id="search">
     <h2>Search</h2>
