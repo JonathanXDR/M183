@@ -1,5 +1,5 @@
 <?php
-require_once '../fw/ElasticSearchLogger.php';
+require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
 if (!isset ($_COOKIE['username'])) {
@@ -10,7 +10,7 @@ if (!isset ($_COOKIE['username'])) {
 
 $logger->log('INFO', 'Background search page accessed', ['username' => $_COOKIE['username']]);
 
-require_once '../fw/db.php';
+require_once 'fw/db.php';
 ?>
 <section id="search">
     <h2>Search</h2>

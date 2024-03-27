@@ -1,6 +1,6 @@
 <?php
-require_once '../config.php';
-require_once '../fw/ElasticSearchLogger.php';
+require_once 'config.php';
+require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
 if (!isset ($_COOKIE['username'])) {
