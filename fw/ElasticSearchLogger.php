@@ -20,7 +20,7 @@ class ElasticSearchLogger
     public function log($level, $message, $context = [])
     {
         $data = [
-            'index' => 'application_logs',
+            'index' => 'logs-' . date('d.m.Y'),
             'body' => [
                 'level' => $level,
                 'message' => $message,

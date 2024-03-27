@@ -14,12 +14,16 @@ services:
   web:
     build: .
     container_name: m183-lb2-web
+    environment:
+      - DBSERVER=m183-lb2-db
     depends_on:
       - db
     ports:
       - '80:80'
     volumes:
-      - .:/var/www/html
+      - type: bind
+        source: /Users/jonathan/Developer/Git/TBZ/M183
+        target: /var/www/html
       - php_logs:/var/log/php
 
   elasticsearch:
@@ -72,6 +76,23 @@ services:
     command: filebeat -e -strict.perms=false
     depends_on:
       - logstash
+
+  elastic-agent:
+    image: docker.elastic.co/beats/elastic-agent:8.12.2
+    depends_on:
+      - elasticsearch
+      - kibana
+    environment:
+      - FLEET_ENROLL=1
+      - FLEET_ENROLL_INSECURE=1
+      - FLEET_SETUP=1
+      - KIBANA_HOST=http://kibana:5601
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - php_logs:/var/log/php
 
 volumes:
   mariadb_data:
