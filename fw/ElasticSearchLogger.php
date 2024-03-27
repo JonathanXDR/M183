@@ -1,5 +1,7 @@
 <?php
-require 'vendor/autoload.php';
+$basePath = dirname(__DIR__, 1);
+
+require_once $basePath . '/vendor/autoload.php';
 
 use Elastic\Elasticsearch\ClientBuilder;
 
