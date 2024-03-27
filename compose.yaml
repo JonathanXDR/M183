@@ -14,16 +14,12 @@ services:
   web:
     build: .
     container_name: m183-lb2-web
-    environment:
-      - DBSERVER=m183-lb2-db
     depends_on:
       - db
     ports:
       - '80:80'
     volumes:
-      - type: bind
-        source: /Users/jonathan/Developer/Git/TBZ/M183
-        target: /var/www/html
+      - .:/var/www/html
       - php_logs:/var/log/php
 
   elasticsearch:
@@ -93,6 +89,20 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - php_logs:/var/log/php
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:8.12.2
+    user: root
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    command: metricbeat -e -system.hostfs=/hostfs
 
 volumes:
   mariadb_data:
