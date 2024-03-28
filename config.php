@@ -1,7 +1,15 @@
 <?php
+
+$basePath = dirname(__DIR__, 1);
+require_once $basePath . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 // Database credentials
-define('DB_HOST', 'm183-lb2-db');
-define('DB_USER', 'root');
-define('DB_PASS', 'Some.Real.Secr3t');
-define('DB_NAME', 'm183_lb2');
+define('DB_HOST', $_ENV['DB_HOST']);
+define('DB_USER', $_ENV['DB_USER']);
+define('DB_PASS', $_ENV['DB_PASS']);
+define('DB_NAME', $_ENV['DB_NAME']);
+
 ?>

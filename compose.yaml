@@ -5,9 +5,9 @@ services:
     image: 'mariadb:latest'
     container_name: m183-lb2-db
     ports:
-      - '3306:3306'
+      - ${DATABASE_PORT}:${DATABASE_PORT}
     environment:
-      - MARIADB_ROOT_PASSWORD=Some.Real.Secr3t
+      - MARIADB_ROOT_PASSWORD=${DATABASE_PASSWORD}
     volumes:
       - mariadb_data:/var/lib/mysql
 
@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     ports:
-      - '80:80'
+      - ${WEB_PORT}:${WEB_PORT}
     volumes:
       - .:/var/www/html
       - php_logs:/var/log/php
@@ -28,7 +28,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=true
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      - ELASTIC_PASSWORD=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     ports:
       - '9200:9200'
     volumes:
@@ -38,26 +38,26 @@ services:
     image: docker.elastic.co/kibana/kibana:8.12.2
     environment:
       - SERVER_NAME=kibana.example.org
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=+NaF+Di3DOetiitU_-=6
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:${ELASTICSEARCH_PORT}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
     ports:
-      - '5601:5601'
+      - '${KIBANA_PORT}:${KIBANA_PORT}'
     depends_on:
       - elasticsearch
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.12.2
     ports:
-      - '5044:5044'
+      - '${LOGSTASH_PORT}:${LOGSTASH_PORT}'
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     depends_on:
       - elasticsearch
     environment:
       - XPACK_MONITORING_ENABLED=true
-      - XPACK_MONITORING_ELASTICSEARCH_USERNAME=elastic
-      - XPACK_MONITORING_ELASTICSEARCH_PASSWORD=elastic
+      - XPACK_MONITORING_ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+      - XPACK_MONITORING_ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.12.2
@@ -82,10 +82,10 @@ services:
       - FLEET_ENROLL=1
       - FLEET_ENROLL_INSECURE=1
       - FLEET_SETUP=1
-      - KIBANA_HOST=http://kibana:5601
-      - ELASTICSEARCH_HOST=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=elastic
+      - KIBANA_HOST=http://kibana:${KIBANA_PORT}
+      - ELASTICSEARCH_HOST=http://elasticsearch:${ELASTICSEARCH_PORT}
+      - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - php_logs:/var/log/php
@@ -99,7 +99,7 @@ services:
       - /:/hostfs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:${ELASTICSEARCH_PORT}
     depends_on:
       - elasticsearch
     command: metricbeat -e -system.hostfs=/hostfs
