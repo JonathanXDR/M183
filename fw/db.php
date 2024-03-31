@@ -34,9 +34,7 @@ function executeStatement($statement, $params = [])
     }
 
     if (!$stmt->execute()) {
-        // Log or output the error
         $logger->log('ERROR', "SQL Error: " . $stmt->error, ['statement' => $statement]);
-        // Displaying error (for debugging only, remove in production)
         echo "SQL Error: " . $stmt->error;
     }
 

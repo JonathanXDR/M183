@@ -11,9 +11,8 @@ $id = isset($_POST['id']) && $_POST['id'] !== "" ? $_POST['id'] : null;
 require_once 'fw/db.php';
 
 if ($id !== null) {
-  // Check if the task exists
   $result = executeStatement("SELECT ID FROM tasks WHERE ID = ?", [$id]);
-  // Assuming executeStatement returns false if the query fails
+
   if ($result === false || $result->num_rows == 0) {
     $id = null;
   }
