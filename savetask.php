@@ -6,28 +6,38 @@ if (!isset($_COOKIE['userid'])) {
   header("Location: /");
   exit();
 }
-$id = "";
-include 'fw/db.php';
-if (isset($_POST['id']) && strlen($_POST['id']) != 0) {
-  $id = $_POST["id"];
-  $stmt = executeStatement("SELECT ID, title, state FROM tasks WHERE ID = ?", [$id]);
-  if ($stmt->num_rows == 0) {
-    $id = "";
+
+$id = isset($_POST['id']) && $_POST['id'] !== "" ? $_POST['id'] : null;
+require_once 'fw/db.php';
+
+if ($id !== null) {
+  // Check if the task exists
+  $result = executeStatement("SELECT ID FROM tasks WHERE ID = ?", [$id]);
+  // Assuming executeStatement returns false if the query fails
+  if ($result === false || $result->num_rows == 0) {
+    $id = null;
   }
 }
+
 require_once 'fw/header.php';
 if (isset($_POST['title']) && isset($_POST['state'])) {
   $state = $_POST['state'];
   $title = $_POST['title'];
   $userid = $_COOKIE['userid'];
-  if ($id == "") {
+
+  if ($id === null) {
     $logger->log('INFO', "New task created by user $userid: $title");
-    $stmt = executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [$title, $state, $userid]);
+    $success = executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [$title, $state, $userid]);
   } else {
     $logger->log('INFO', "Task $id updated by user $userid.");
-    $stmt = executeStatement("UPDATE tasks SET title = ?, state = ? WHERE ID = ?", [$title, $state, $id]);
+    $success = executeStatement("UPDATE tasks SET title = ?, state = ? WHERE ID = ?", [$title, $state, $id]);
   }
-  echo "<span class='info info-success'>Update successful</span>";
+
+  if ($success) {
+    echo "<span class='info info-success'>Update successful</span>";
+  } else {
+    echo "<span class='info info-error'>Update failed</span>";
+  }
 } else {
   $logger->log('ERROR', "Task update failed by user $userid: Missing title or state.");
   echo "<span class='info info-error'>No update was made</span>";

@@ -9,7 +9,7 @@ if (!isset($_COOKIE['username'])) {
     exit();
 }
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 $userid = $_COOKIE['userid'];
 
 $logger->log('INFO', 'Task list viewed', ['userid' => $userid]);
