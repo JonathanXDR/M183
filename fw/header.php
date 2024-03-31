@@ -2,13 +2,19 @@
 $id = 0;
 $roleid = 0;
 require_once 'db.php';
-if (isset ($_COOKIE['userid'])) {
-    $id = $_COOKIE['userid'];
-    $stmt = executeStatement("select users.id userid, roles.id roleid, roles.title rolename from users inner join permissions on users.id = permissions.userid inner join roles on permissions.roleID = roles.id where userid = $id");
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($db_userid, $db_roleid, $db_rolename);
-        $stmt->fetch();
-        $roleid = $db_roleid;
+$conn = getConnection();
+if (isset($_COOKIE['userid'])) {
+    $userid = intval($_COOKIE['userid']);
+    if ($stmt = $conn->prepare("SELECT users.id, roles.id, roles.title FROM users INNER JOIN permissions ON users.id = permissions.userid INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?")) {
+        $stmt->bind_param("i", $userid);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($db_userid, $db_roleid, $db_rolename);
+            $stmt->fetch();
+            $roleid = $db_roleid;
+        }
+        $stmt->close();
     }
 }
 ?>
@@ -27,7 +33,7 @@ if (isset ($_COOKIE['userid'])) {
 <body>
     <header>
         <div>This is the insecure m183 test app</div>
-        <?php if (isset ($_COOKIE['userid'])) { ?>
+        <?php if (isset($_COOKIE['userid'])) { ?>
             <nav>
                 <ul>
                     <li><a href="/">Tasks</a></li>

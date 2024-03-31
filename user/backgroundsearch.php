@@ -2,7 +2,7 @@
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (!isset ($_COOKIE['username'])) {
+if (!isset($_COOKIE['username'])) {
     $logger->log('WARN', 'Unauthorized background search attempt', ['cookie' => $_COOKIE]);
     header("Location: ../login.php");
     exit();
@@ -43,7 +43,7 @@ require_once 'fw/db.php';
                 submitHandler: function (form) {
                     provider = $("#searchurl").val();
                     terms = $("#terms").val();
-                    userid = <?php echo $_COOKIE["userid"] ?>;
+                    userid = <?php echo htmlspecialchars($_COOKIE["userid"], ENT_QUOTES, 'UTF-8'); ?>;
                     $("#msg").show();
                     $("#result").html("");
                     $.post("search.php", {
@@ -57,7 +57,6 @@ require_once 'fw/db.php';
                         $("#result").show(500);
                     });
                     return false;
-                    //form.submit();
                 }
             });
         });

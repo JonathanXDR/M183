@@ -3,7 +3,7 @@ require_once 'config.php';
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (!isset ($_COOKIE['username'])) {
+if (!isset($_COOKIE['username'])) {
     $logger->log('WARN', 'Unauthorized task list access attempt', ['cookie' => $_COOKIE]);
     header("Location: ../login.php");
     exit();
@@ -14,18 +14,14 @@ $userid = $_COOKIE['userid'];
 
 $logger->log('INFO', 'Task list viewed', ['userid' => $userid]);
 
-// Check connection
 if ($conn->connect_error) {
-    die ("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Prepare SQL statement to retrieve user from database
-$stmt = $conn->prepare("select ID, title, state from tasks where UserID = $userid");
-// Execute the statement
+$stmt = $conn->prepare("select ID, title, state from tasks where UserID = ?");
+$stmt->bind_param("i", $userid);
 $stmt->execute();
-// Store the result
 $stmt->store_result();
-// Bind the result variables
 $stmt->bind_result($db_id, $db_title, $db_state);
 ?>
 <section id="list">
@@ -40,17 +36,17 @@ $stmt->bind_result($db_id, $db_title, $db_state);
         <?php while ($stmt->fetch()) { ?>
             <tr>
                 <td>
-                    <?php echo $db_id ?>
+                    <?php echo htmlspecialchars($db_id) ?>
                 </td>
                 <td class="wide">
-                    <?php echo $db_title ?>
+                    <?php echo htmlspecialchars($db_title) ?>
                 </td>
                 <td>
-                    <?php echo ucfirst($db_state) ?>
+                    <?php echo htmlspecialchars(ucfirst($db_state)) ?>
                 </td>
                 <td>
-                    <a href="edit.php?id=<?php echo $db_id ?>">edit</a> | <a
-                        href="delete.php?id=<?php echo $db_id ?>">delete</a>
+                    <a href="edit.php?id=<?php echo htmlspecialchars($db_id) ?>">edit</a> | <a
+                        href="delete.php?id=<?php echo htmlspecialchars($db_id) ?>">delete</a>
                 </td>
             </tr>
         <?php } ?>
