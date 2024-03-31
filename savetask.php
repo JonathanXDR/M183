@@ -1,44 +1,46 @@
 <?php
-// Check if the user is logged in
-if (!isset ($_COOKIE['userid'])) {
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+if (!isset($_COOKIE['userid'])) {
+  $logger->log('WARN', 'Unauthorized attempt to save a task.');
   header("Location: /");
   exit();
 }
-$id = "";
-include 'fw/db.php';
-// see if the id exists in the database
 
-if (isset ($_POST['id']) && strlen($_POST['id']) != 0) {
-  $id = $_POST["id"];
-  $stmt = $conn->prepare("select ID, title, state from tasks where ID = ?");
-  $stmt->bind_param("i", $id);
-  $stmt->execute();
-  if ($stmt->num_rows == 0) {
-    $id = "";
+$id = isset($_POST['id']) && $_POST['id'] !== "" ? $_POST['id'] : null;
+require_once 'fw/db.php';
+
+if ($id !== null) {
+  // Check if the task exists
+  $result = executeStatement("SELECT ID FROM tasks WHERE ID = ?", [$id]);
+  // Assuming executeStatement returns false if the query fails
+  if ($result === false || $result->num_rows == 0) {
+    $id = null;
   }
 }
 
 require_once 'fw/header.php';
-if (isset ($_POST['title']) && isset ($_POST['state'])) {
+if (isset($_POST['title']) && isset($_POST['state'])) {
   $state = $_POST['state'];
   $title = $_POST['title'];
   $userid = $_COOKIE['userid'];
 
-  if ($id == "") {
-    $stmt = $conn->prepare("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $title, $state, $userid);
-    $stmt->execute();
+  if ($id === null) {
+    $logger->log('INFO', "New task created by user $userid: $title");
+    $success = executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [$title, $state, $userid]);
   } else {
-    if ($id != "") {
-      $stmt = $conn->prepare("UPDATE tasks SET title = ?, state = ? WHERE ID = ?");
-      $stmt->bind_param("ssi", $title, $state, $id);
-      $stmt->execute();
-    }
+    $logger->log('INFO', "Task $id updated by user $userid.");
+    $success = executeStatement("UPDATE tasks SET title = ?, state = ? WHERE ID = ?", [$title, $state, $id]);
+  }
 
-  echo "<span class='info info-success'>Update successfull</span>";
+  if ($success) {
+    echo "<span class='info info-success'>Update successful</span>";
+  } else {
+    echo "<span class='info info-error'>Update failed</span>";
+  }
 } else {
+  $logger->log('ERROR', "Task update failed by user $userid: Missing title or state.");
   echo "<span class='info info-error'>No update was made</span>";
 }
-
 require_once 'fw/footer.php';
 ?>

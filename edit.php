@@ -1,25 +1,28 @@
 <?php
-// Check if the user is logged in
-if (!isset ($_COOKIE['userid'])) {
+if (!isset($_COOKIE['userid'])) {
   header("Location: /");
   exit();
 }
 
-$options = array("Open", "In Progress", "Done");
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
 
-// read task if possible
+$options = ["Open", "In Progress", "Done"];
 $title = "";
 $state = "";
 $taskid = "";
 
-if (isset ($_GET['id'])) {
+if (isset($_GET['id'])) {
   $taskid = $_GET["id"];
   require_once 'fw/db.php';
-  $stmt = executeStatement("select ID, title, state from tasks where ID = $taskid");
+  $stmt = executeStatement("SELECT ID, title, state FROM tasks WHERE ID = ?", [$taskid]);
+
+  $logger->log('INFO', 'Fetching task for editing', ['task_id' => $taskid]);
+
   if ($stmt->num_rows > 0) {
     $stmt->bind_result($db_id, $db_title, $db_state);
     $stmt->fetch();
-    $title = $db_title;
+    $title = htmlspecialchars($db_title, ENT_QUOTES, 'UTF-8');
     $state = $db_state;
   }
 }
@@ -27,33 +30,27 @@ if (isset ($_GET['id'])) {
 require_once 'fw/header.php';
 ?>
 
-<?php if (isset ($_GET['id'])) { ?>
-  <h1>Edit Task</h1>
-<?php } else { ?>
-  <h1>Create Task</h1>
-<?php } ?>
+<h1>
+  <?= isset($_GET['id']) ? "Edit Task" : "Create Task" ?>
+</h1>
 
 <form id="form" method="post" action="savetask.php">
-  <input type="hidden" name="id" value="<?php echo $taskid ?>" />
+  <input type="hidden" name="id" value="<?= htmlspecialchars($taskid, ENT_QUOTES, 'UTF-8') ?>" />
   <div class="form-group">
     <label for="title">Description</label>
-    <input type="text" class="form-control size-medium" name="title" id="title" value="<?php echo $title ?>">
+    <input type="text" class="form-control size-medium" name="title" id="title" value="<?= $title ?>">
   </div>
   <div class="form-group">
     <label for="state">State</label>
     <select name="state" id="state" class="size-auto">
-      <?php for ($i = 0; $i < count($options); $i++): ?>
-        <span>
-          <?php $options[1] ?>
-        </span>
-        <option value='<?= strtolower($options[$i]); ?>' <?= $state == strtolower($options[$i]) ? 'selected' : '' ?>>
-          <?= $options[$i]; ?>
+      <?php foreach ($options as $option): ?>
+        <option value="<?= strtolower($option); ?>" <?= $state == strtolower($option) ? 'selected' : '' ?>>
+          <?= htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?>
         </option>
-      <?php endfor; ?>
+      <?php endforeach; ?>
     </select>
   </div>
   <div class="form-group">
-    <label for="submit"></label>
     <input id="submit" type="submit" class="btn size-auto" value="Submit" />
   </div>
 </form>
