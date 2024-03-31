@@ -13,39 +13,24 @@ function executeStatement($statement, $params = [])
         return false;
     }
 
-    $stmt = $conn->prepare($statement);
-    if (!$stmt) {
+    if ($stmt = $conn->prepare($statement)) {
+        if (!empty($params)) {
+            $types = str_repeat('s', count($params));
+            $stmt->bind_param($types, ...$params);
+        }
+
+        if ($stmt->execute()) {
+            $logger->log('INFO', 'Statement executed successfully', ['statement' => $statement]);
+            $stmt->store_result();
+            return $stmt;
+        } else {
+            $logger->log('ERROR', 'Statement execution failed', ['statement' => $statement, 'error' => $stmt->error]);
+            return false;
+        }
+    } else {
         $logger->log('ERROR', 'Failed to prepare statement', ['statement' => $statement, 'error' => $conn->error]);
         return false;
     }
-
-    if (!empty($params)) {
-        $types = '';
-        foreach ($params as $param) {
-            if (is_int($param)) {
-                $types .= 'i';
-            } elseif (is_double($param)) {
-                $types .= 'd';
-            } else {
-                $types .= 's';
-            }
-        }
-        $stmt->bind_param($types, ...$params);
-    }
-
-    if (!$stmt->execute()) {
-        $logger->log('ERROR', "SQL Error: " . $stmt->error, ['statement' => $statement]);
-        echo "SQL Error: " . $stmt->error;
-    }
-
-
-    $logger->log('INFO', 'Statement executed successfully', ['statement' => $statement]);
-
-    if (preg_match('/^(INSERT|UPDATE|DELETE)/i', $statement)) {
-        $stmt->close();
-        return true;
-    }
-    return $stmt;
 }
 
 function getConnection()
