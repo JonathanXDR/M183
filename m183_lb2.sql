@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: m183_lb2
--- Generation Time: 2024-03-25 14:13:24.5920
+-- Generation Time: 2024-04-02 07:26:05.2330
 -- -------------------------------------------------------------
 
 
@@ -59,8 +59,8 @@ INSERT INTO `roles` (`ID`, `title`) VALUES
 (2, 'User');
 
 INSERT INTO `users` (`ID`, `username`, `password`) VALUES
-(1, 'admin1', 'Awesome.Pass34'),
-(2, 'user1', 'Amazing.Pass23');
+(1, 'admin1', '$2y$10$3uADXmuSRHQA5px8aQnvu.3NiElA2QgXr8haEevS/1sL.AuvOcvOC'),
+(2, 'user1', '$2y$10$IXO4ym2N2GF//B2btCj0COpAkTXkupRyAMNgjzXV.KIT3PKCp77F.');
 
 
 

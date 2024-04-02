@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        if ($password === $user['password']) {
+        if (password_verify($password, $user['password'])) {
             setcookie("username", $username, time() + (86400 * 30), "/");
             setcookie("userid", $user['id'], time() + (86400 * 30), "/");
             $logger->log('INFO', 'Login successful', ['username' => $username]);
