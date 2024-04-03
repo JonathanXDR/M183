@@ -28,11 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: index.php");
             exit();
         } else {
-            echo "Incorrect password";
+            echo "Incorrect password or username";
             $logger->log('ERROR', 'Incorrect password attempt', ['username' => $username]);
         }
     } else {
-        echo "Username does not exist";
+        echo "Incorrect password or username";
         $logger->log('WARN', 'Login attempt for non-existent user', ['username' => $username]);
     }
 
