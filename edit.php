@@ -1,7 +1,12 @@
 <?php
 require_once 'fw/db.php';
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+$logger->log('INFO', 'Accessed edit task page.', ['userID' => $_COOKIE['userid'] ?? 'anonymous', 'taskID' => $_GET['id'] ?? 'new']);
+
 $conn = getConnection();
 if (!$conn) {
+  $logger->log('ERROR', 'Connection failed during task edit.', ['error' => $conn->connect_error]);
   die("Connection failed: " . $conn->connect_error);
 }
 
@@ -20,6 +25,9 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $row = $result->fetch_assoc();
     $title = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
     $state = $row['state'];
+    $logger->log('INFO', 'Loaded task for editing.', ['taskID' => $taskid, 'state' => $state]);
+  } else {
+    $logger->log('WARN', 'Attempted to edit non-existing task.', ['taskID' => $taskid]);
   }
   $stmt->close();
 }

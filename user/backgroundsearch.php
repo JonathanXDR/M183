@@ -8,7 +8,8 @@ if (!isset($_COOKIE['username'])) {
     exit();
 }
 
-$logger->log('INFO', 'Background search page accessed', ['username' => $_COOKIE['username']]);
+$username = $_COOKIE['username'];
+$logger->log('INFO', 'Initiating background search', ['username' => $username]);
 
 require_once 'fw/db.php';
 ?>

@@ -14,6 +14,7 @@ $connection = getConnection();
 if ($id !== null) {
   $stmt = $connection->prepare("SELECT ID FROM tasks WHERE ID = ?");
   if (!$stmt) {
+    $logger->log('ERROR', 'Failed to prepare statement for task lookup.', ['taskID' => $id]);
     die('Ein Fehler ist aufgetreten beim Vorbereiten des Statements.');
   }
 
@@ -22,6 +23,7 @@ if ($id !== null) {
   $result = $stmt->get_result();
 
   if ($result->num_rows == 0) {
+    $logger->log('INFO', 'No task found for the given ID during update attempt.', ['taskID' => $id]);
     $id = null;
   }
 
@@ -35,20 +37,22 @@ if (isset($_POST['title']) && isset($_POST['state'])) {
   $userid = intval($_COOKIE['userid']);
 
   if ($id === null) {
-    $logger->log('INFO', "New task created by user $userid: $title");
+    $logger->log('INFO', "Attempting to create a new task", ['userID' => $userid, 'title' => $title]);
     $success = executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [$title, $state, $userid]);
   } else {
-    $logger->log('INFO', "Task $id updated by user $userid.");
+    $logger->log('INFO', "Attempting to update an existing task", ['taskID' => $id, 'userID' => $userid, 'title' => $title]);
     $success = executeStatement("UPDATE tasks SET title = ?, state = ? WHERE ID = ?", [$title, $state, $id]);
   }
 
   if ($success) {
+    $logger->log('INFO', 'Task update successful', ['taskID' => $id, 'userID' => $userid]);
     echo "<span class='info info-success'>Update successful</span>";
   } else {
+    $logger->log('ERROR', 'Task update failed', ['taskID' => $id, 'userID' => $userid]);
     echo "<span class='info info-error'>Update failed</span>";
   }
 } else {
-  $logger->log('ERROR', "Task update failed by user $userid: Missing title or state.");
+  $logger->log('ERROR', "Missing title or state in task update attempt.", ['userID' => $userid]);
   echo "<span class='info info-error'>No update was made</span>";
 }
 require_once 'fw/footer.php';

@@ -1,6 +1,9 @@
 <?php
 require_once 'fw/db.php';
+require_once 'fw/ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
 $conn = getConnection();
+
 if (!$conn) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -11,6 +14,8 @@ $stmt->bind_param("i", $userid);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($db_id, $db_title, $db_state);
+$logger->log('INFO', 'Task list fetched', ['userid' => $userid]);
+
 ?>
 <section id="list">
     <a href="edit.php">Create Task</a>

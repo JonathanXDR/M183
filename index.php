@@ -8,16 +8,19 @@ if (!isset($_COOKIE['username'])) {
     exit();
 }
 
-$logger->log('INFO', 'User accessed the index page.', ['username' => $_COOKIE['username']]);
+$username = $_COOKIE['username'];
+$logger->log('INFO', 'User accessed the index page.', ['username' => $username]);
 
 require_once 'fw/header.php';
 ?>
 <h2>Welcome,
-    <?= htmlspecialchars($_COOKIE['username'], ENT_QUOTES, 'UTF-8'); ?>!
+    <?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>!
 </h2>
 
 <?php
 if (isset($_COOKIE['userid'])) {
+    $userid = $_COOKIE['userid'];
+    $logger->log('INFO', 'Displaying tasks and search for user.', ['username' => $username, 'userid' => $userid]);
     require_once 'user/tasklist.php';
     echo "<hr />";
     require_once 'user/backgroundsearch.php';

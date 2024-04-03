@@ -61,6 +61,7 @@ function getConnection()
             $logger->log('ERROR', 'Database connection error', ['error' => $conn->connect_error]);
             die('Datenbankverbindung fehlgeschlagen.');
         }
+        $logger->log('INFO', 'Database connection established');
         return $conn;
     } catch (Exception $e) {
         $logger->log('ERROR', 'Database connection error', ['error' => $e->getMessage()]);

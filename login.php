@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn = getConnection();
 
     if (!$conn) {
-        $logger->log('ERROR', 'Database connection failed');
+        $logger->log('ERROR', 'Database connection failed during login attempt');
         die("Connection failed");
     }
 

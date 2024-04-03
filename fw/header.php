@@ -1,5 +1,8 @@
 <?php
 require_once 'db.php';
+require_once 'ElasticSearchLogger.php';
+$logger = new ElasticSearchLogger();
+
 $conn = getConnection();
 if ($conn && isset($_COOKIE['userid'])) {
     $userid = intval($_COOKIE['userid']);
@@ -15,6 +18,7 @@ if ($conn && isset($_COOKIE['userid'])) {
         }
         $stmt->close();
     }
+    $logger->log('INFO', 'User accessed page with role', ['userID' => $userid, 'roleID' => $roleid ?? 'unknown']);
 }
 ?>
 <!DOCTYPE html>

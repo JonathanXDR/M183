@@ -2,16 +2,17 @@
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["userid"])) {
-   $logger->log('WARN', 'Search attempted with insufficient information.');
+   $logger->log('WARN', 'Search attempted with insufficient information.', ['POST' => $_POST]);
    exit("Not enough information provided");
 }
 $provider = htmlspecialchars($_POST["provider"], ENT_QUOTES, 'UTF-8');
 $terms = htmlspecialchars($_POST["terms"], ENT_QUOTES, 'UTF-8');
 $userid = intval($_POST["userid"]);
-sleep(1);
-$logger->log('INFO', "Search performed by user $userid: $terms", ['provider' => $provider]);
+$logger->log('INFO', "Search initiated", ['provider' => $provider, 'terms' => $terms, 'userid' => $userid]);
+
 function callAPI($method, $url, $data)
 {
+   $logger = new ElasticSearchLogger();
    $curl = curl_init();
    switch ($method) {
       case "POST":
@@ -32,7 +33,10 @@ function callAPI($method, $url, $data)
    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
    $result = curl_exec($curl);
    if (!$result) {
+      $logger->log('WARN', 'Search API call returned no results', ['url' => $url]);
       $result = "No results found!";
+   } else {
+      $logger->log('INFO', 'Search API call successful', ['url' => $url, 'result' => $result]);
    }
    curl_close($curl);
    return $result;
