@@ -39,9 +39,14 @@ function executeStatement($statement, $params = [])
 
     if ($stmt->execute()) {
         $logger->log('INFO', 'Statement executed successfully', ['statement' => $statement]);
-        return $stmt;
+        if ($stmt->store_result()) {
+            $stmt->free_result();
+        }
+        $stmt->close();
+        return true;
     } else {
         $logger->log('ERROR', 'Statement execution failed', ['statement' => $statement, 'error' => $stmt->error]);
+        $stmt->close();
         die('Ein Fehler ist aufgetreten.');
     }
 }

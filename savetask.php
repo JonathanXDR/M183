@@ -9,13 +9,23 @@ if (!isset($_COOKIE['userid'])) {
 
 $id = isset($_POST['id']) && $_POST['id'] !== "" ? intval($_POST['id']) : null;
 require_once 'fw/db.php';
+$connection = getConnection();
 
 if ($id !== null) {
-  $result = executeStatement("SELECT ID FROM tasks WHERE ID = ?", [$id]);
+  $stmt = $connection->prepare("SELECT ID FROM tasks WHERE ID = ?");
+  if (!$stmt) {
+    die('Ein Fehler ist aufgetreten beim Vorbereiten des Statements.');
+  }
 
-  if ($result === false || $result->num_rows == 0) {
+  $stmt->bind_param("i", $id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows == 0) {
     $id = null;
   }
+
+  $stmt->close();
 }
 
 require_once 'fw/header.php';
