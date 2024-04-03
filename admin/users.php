@@ -21,13 +21,13 @@ if (!$conn) {
     die("Datenbankverbindung fehlgeschlagen");
 }
 
-$userid = isset($_COOKIE['userid']) ? intval($_COOKIE['userid']) : 0;
+$userID = isset($_COOKIE['userID']) ? intval($_COOKIE['userID']) : 0;
 $stmt = $conn->prepare("SELECT roleID FROM permissions WHERE userID = ?");
-$stmt->bind_param("i", $userid);
+$stmt->bind_param("i", $userID);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows == 0) {
-    $logger->log('WARN', 'Access attempt to user list without sufficient permissions', ['userID' => $userid]);
+    $logger->log('WARN', 'Access attempt to user list without sufficient permissions', ['userID' => $userID]);
     die("Zugriff verweigert");
 }
 
@@ -40,11 +40,11 @@ while ($stmt->fetch()) {
     }
 }
 if (!$isAdmin) {
-    $logger->log('WARN', 'Non-admin attempted to access user list', ['userID' => $userid]);
+    $logger->log('WARN', 'Non-admin attempted to access user list', ['userID' => $userID]);
     die("Zugriff verweigert");
 }
 
-$logger->log('INFO', 'Admin accessed user list', ['userID' => $userid]);
+$logger->log('INFO', 'Admin accessed user list', ['userID' => $userID]);
 
 $stmt = $conn->prepare("SELECT users.ID, users.username, roles.title FROM users INNER JOIN permissions ON users.ID = permissions.userID INNER JOIN roles ON permissions.roleID = roles.ID ORDER BY username");
 $stmt->execute();

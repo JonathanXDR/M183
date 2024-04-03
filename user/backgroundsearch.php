@@ -44,13 +44,13 @@ require_once 'fw/db.php';
                 submitHandler: function (form) {
                     let provider = $("#searchurl").val();
                     let terms = $("#terms").val();
-                    let userid =
-                        <?php echo htmlspecialchars($_COOKIE["userid"], ENT_QUOTES, 'UTF-8'); ?>;
+                    let userID =
+                        <?php echo htmlspecialchars($_COOKIE["userID"], ENT_QUOTES, 'UTF-8'); ?>;
                     $("#msg").show();
                     $("#result").html("");
                     $.post(provider, {
                         terms: terms,
-                        userid: userid
+                        userID: userID
                     }, function (data) {
                         $("#result").html(data);
                         $("#msg").hide(500);

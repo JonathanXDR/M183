@@ -1,7 +1,7 @@
 <?php
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
-if (!isset($_COOKIE['userid'])) {
+if (!isset($_COOKIE['userID'])) {
   $logger->log('WARN', 'Unauthorized attempt to save a task.');
   header("Location: /");
   exit();
@@ -34,25 +34,25 @@ require_once 'fw/header.php';
 if (isset($_POST['title']) && isset($_POST['state'])) {
   $state = $_POST['state'];
   $title = $_POST['title'];
-  $userid = intval($_COOKIE['userid']);
+  $userID = intval($_COOKIE['userID']);
 
   if ($id === null) {
-    $logger->log('INFO', "Attempting to create a new task", ['userID' => $userid, 'title' => $title]);
-    $success = executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [$title, $state, $userid]);
+    $logger->log('INFO', "Attempting to create a new task", ['userID' => $userID, 'title' => $title]);
+    $success = executeStatement("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)", [$title, $state, $userID]);
   } else {
-    $logger->log('INFO', "Attempting to update an existing task", ['taskID' => $id, 'userID' => $userid, 'title' => $title]);
+    $logger->log('INFO', "Attempting to update an existing task", ['taskID' => $id, 'userID' => $userID, 'title' => $title]);
     $success = executeStatement("UPDATE tasks SET title = ?, state = ? WHERE ID = ?", [$title, $state, $id]);
   }
 
   if ($success) {
-    $logger->log('INFO', 'Task update successful', ['taskID' => $id, 'userID' => $userid]);
+    $logger->log('INFO', 'Task update successful', ['taskID' => $id, 'userID' => $userID]);
     echo "<span class='info info-success'>Update successful</span>";
   } else {
-    $logger->log('ERROR', 'Task update failed', ['taskID' => $id, 'userID' => $userid]);
+    $logger->log('ERROR', 'Task update failed', ['taskID' => $id, 'userID' => $userID]);
     echo "<span class='info info-error'>Update failed</span>";
   }
 } else {
-  $logger->log('ERROR', "Missing title or state in task update attempt.", ['userID' => $userid]);
+  $logger->log('ERROR', "Missing title or state in task update attempt.", ['userID' => $userID]);
   echo "<span class='info info-error'>No update was made</span>";
 }
 require_once 'fw/footer.php';

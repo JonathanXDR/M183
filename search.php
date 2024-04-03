@@ -1,14 +1,14 @@
 <?php
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
-if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["userid"])) {
+if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["userID"])) {
    $logger->log('WARN', 'Search attempted with insufficient information.', ['POST' => $_POST]);
    exit("Not enough information provided");
 }
 $provider = htmlspecialchars($_POST["provider"], ENT_QUOTES, 'UTF-8');
 $terms = htmlspecialchars($_POST["terms"], ENT_QUOTES, 'UTF-8');
-$userid = intval($_POST["userid"]);
-$logger->log('INFO', "Search initiated", ['provider' => $provider, 'terms' => $terms, 'userid' => $userid]);
+$userID = intval($_POST["userID"]);
+$logger->log('INFO', "Search initiated", ['provider' => $provider, 'terms' => $terms, 'userID' => $userID]);
 
 function callAPI($method, $url, $data)
 {
@@ -41,7 +41,7 @@ function callAPI($method, $url, $data)
    curl_close($curl);
    return $result;
 }
-$theurl = 'http://localhost' . $provider . '?userid=' . urlencode($userid) . '&terms=' . urlencode($terms);
+$theurl = 'http://localhost' . $provider . '?userID=' . urlencode($userID) . '&terms=' . urlencode($terms);
 $get_data = callAPI('GET', $theurl, false);
 echo $get_data;
 ?>

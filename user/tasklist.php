@@ -8,13 +8,13 @@ if (!$conn) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$userid = isset($_COOKIE['userid']) ? intval($_COOKIE['userid']) : 0;
+$userID = isset($_COOKIE['userID']) ? intval($_COOKIE['userID']) : 0;
 $stmt = $conn->prepare("SELECT ID, title, state FROM tasks WHERE UserID = ?");
-$stmt->bind_param("i", $userid);
+$stmt->bind_param("i", $userID);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($db_id, $db_title, $db_state);
-$logger->log('INFO', 'Task list fetched', ['userid' => $userid]);
+$logger->log('INFO', 'Task list fetched', ['userID' => $userID]);
 
 ?>
 <section id="list">

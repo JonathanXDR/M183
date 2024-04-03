@@ -8,7 +8,7 @@ if (isset($_COOKIE['username'])) {
 }
 
 setcookie('username', '', time() - 3600, '/');
-setcookie('userid', '', time() - 3600, '/');
+setcookie('userID', '', time() - 3600, '/');
 
 header("Location: /");
 exit();

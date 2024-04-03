@@ -4,21 +4,21 @@ require_once 'ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
 $conn = getConnection();
-if ($conn && isset($_COOKIE['userid'])) {
-    $userid = intval($_COOKIE['userid']);
-    if ($stmt = $conn->prepare("SELECT users.id, roles.id, roles.title FROM users INNER JOIN permissions ON users.id = permissions.userid INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?")) {
-        $stmt->bind_param("i", $userid);
+if ($conn && isset($_COOKIE['userID'])) {
+    $userID = intval($_COOKIE['userID']);
+    if ($stmt = $conn->prepare("SELECT users.id, roles.id, roles.title FROM users INNER JOIN permissions ON users.id = permissions.userID INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?")) {
+        $stmt->bind_param("i", $userID);
         $stmt->execute();
         $stmt->store_result();
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($db_userid, $db_roleid, $db_rolename);
+            $stmt->bind_result($db_userID, $db_roleid, $db_rolename);
             while ($stmt->fetch()) {
                 $roleid = $db_roleid;
             }
         }
         $stmt->close();
     }
-    $logger->log('INFO', 'User accessed page with role', ['userID' => $userid, 'roleID' => $roleid ?? 'unknown']);
+    $logger->log('INFO', 'User accessed page with role', ['userID' => $userID, 'roleID' => $roleid ?? 'unknown']);
 }
 ?>
 <!DOCTYPE html>
@@ -36,7 +36,7 @@ if ($conn && isset($_COOKIE['userid'])) {
 <body>
     <header>
         <div>This is the insecure m183 test app</div>
-        <?php if (isset($_COOKIE['userid'])) { ?>
+        <?php if (isset($_COOKIE['userID'])) { ?>
             <nav>
                 <ul>
                     <li><a href="/">Tasks</a></li>

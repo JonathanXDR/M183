@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (password_verify($password, $user['password'])) {
             setcookie("username", $username, time() + (86400 * 30), "/");
-            setcookie("userid", $user['id'], time() + (86400 * 30), "/");
+            setcookie("userID", $user['id'], time() + (86400 * 30), "/");
             $logger->log('INFO', 'Login successful', ['username' => $username]);
             header("Location: index.php");
             exit();

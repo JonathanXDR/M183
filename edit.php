@@ -2,7 +2,7 @@
 require_once 'fw/db.php';
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
-$logger->log('INFO', 'Accessed edit task page.', ['userID' => $_COOKIE['userid'] ?? 'anonymous', 'taskID' => $_GET['id'] ?? 'new']);
+$logger->log('INFO', 'Accessed edit task page.', ['userID' => $_COOKIE['userID'] ?? 'anonymous', 'taskID' => $_GET['id'] ?? 'new']);
 
 $conn = getConnection();
 if (!$conn) {
