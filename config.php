@@ -5,10 +5,24 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-define('DB_HOST', $_ENV['DATABASE_HOST']);
-define('DB_USER', $_ENV['DATABASE_USER']);
-define('DB_PASS', $_ENV['DATABASE_PASSWORD']);
-define('DB_NAME', $_ENV['DATABASE_NAME']);
-define('DB_PORT', $_ENV['DATABASE_PORT']);
+define('DATABASE_HOST', $_ENV['DATABASE_HOST']);
+define('DATABASE_USER', $_ENV['DATABASE_USER']);
+define('DATABASE_PASSWORD', $_ENV['DATABASE_PASSWORD']);
+define('DATABASE_NAME', $_ENV['DATABASE_NAME']);
+define('DATABASE_TYPE', $_ENV['DATABASE_TYPE']);
+define('DATABASE_PORT', $_ENV['DATABASE_PORT']);
+
+define('WEB_PORT', $_ENV['WEB_PORT']);
+
+define('ELASTIC_USERNAME', $_ENV['ELASTIC_USERNAME']);
+define('ELASTIC_PASSWORD', $_ENV['ELASTIC_PASSWORD']);
+
+define('ELASTICSEARCH_USERNAME', $_ENV['ELASTICSEARCH_USERNAME']);
+define('ELASTICSEARCH_PASSWORD', $_ENV['ELASTICSEARCH_PASSWORD']);
+define('ELASTICSEARCH_HOST', $_ENV['ELASTICSEARCH_HOST']);
+define('ELASTICSEARCH_PORT', $_ENV['ELASTICSEARCH_PORT']);
+
+define('KIBANA_PORT', $_ENV['KIBANA_PORT']);
+define('LOGSTASH_PORT', $_ENV['LOGSTASH_PORT']);
 
 ?>

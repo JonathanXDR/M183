@@ -1,6 +1,10 @@
 <?php
-require_once 'config.php';
+$basePath = dirname(__DIR__, 1);
 require_once 'fw/ElasticSearchLogger.php';
+require_once $basePath . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable($basePath);
+$dotenv->load();
 $logger = new ElasticSearchLogger();
 
 if (!isset($_COOKIE['username'])) {
@@ -9,7 +13,7 @@ if (!isset($_COOKIE['username'])) {
     exit();
 }
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+$conn = new mysqli($_ENV['DATABASE_HOST'], $_ENV['DATABASE_USER'], $_ENV['DATABASE_PASSWORD'], $_ENV['DATABASE_NAME'], $_ENV['DATABASE_PORT']);
 $userid = $_COOKIE['userid'];
 
 $logger->log('INFO', 'Task list viewed', ['userid' => $userid]);

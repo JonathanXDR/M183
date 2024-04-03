@@ -1,7 +1,11 @@
 <?php
 
-require_once dirname(__DIR__) . '/config.php';
+$basePath = dirname(__DIR__, 1);
 require_once 'ElasticSearchLogger.php';
+require_once $basePath . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable($basePath);
+$dotenv->load();
 
 function executeStatement($statement, $params = [])
 {
@@ -36,11 +40,11 @@ function executeStatement($statement, $params = [])
 function getConnection()
 {
     $logger = new ElasticSearchLogger();
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+    $conn = new mysqli($_ENV['DATABASE_HOST'], $_ENV['DATABASE_USER'], $_ENV['DATABASE_PASSWORD'], $_ENV['DATABASE_NAME'], $_ENV['DATABASE_PORT']);
 
     if ($conn->connect_error) {
         $logger->log('ERROR', 'Database connection error', ['error' => $conn->connect_error]);
-        die("Connection failed: " . $conn->connect_error);
+        return null;
     }
 
     return $conn;

@@ -1,5 +1,4 @@
 <?php
-require_once 'config.php';
 require_once 'fw/ElasticSearchLogger.php';
 
 $logger = new ElasticSearchLogger();
@@ -10,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $logger->log('INFO', 'Login attempt', ['username' => $username]);
 
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+    $conn = new mysqli($_ENV['DATABASE_HOST'], $_ENV['DATABASE_USER'], $_ENV['DATABASE_PASSWORD'], $_ENV['DATABASE_NAME'], $_ENV['DATABASE_PORT']);
 
     if ($conn->connect_error) {
         $logger->log('ERROR', 'Database connection failed', ['error' => $conn->connect_error]);

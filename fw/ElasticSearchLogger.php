@@ -2,6 +2,8 @@
 $basePath = dirname(__DIR__, 1);
 
 require_once $basePath . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable($basePath);
+$dotenv->load();
 
 use Elastic\Elasticsearch\ClientBuilder;
 
@@ -12,8 +14,8 @@ class ElasticSearchLogger
     public function __construct()
     {
         $this->client = ClientBuilder::create()
-            ->setHosts(['elasticsearch:9200'])
-            ->setBasicAuthentication('elastic', 'elastic')
+            ->setHosts([$_ENV['ELASTICSEARCH_HOST'] . ':' . $_ENV['ELASTICSEARCH_PORT']])
+            ->setBasicAuthentication($_ENV['ELASTIC_USERNAME'], $_ENV['ELASTIC_PASSWORD'])
             ->build();
     }
 
