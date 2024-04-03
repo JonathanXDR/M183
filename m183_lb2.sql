@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: m183_lb2
--- Generation Time: 2024-04-02 07:26:05.2330
+-- Generation Time: 2024-04-03 22:13:45.1190
 -- -------------------------------------------------------------
 
 
@@ -57,6 +57,14 @@ INSERT INTO `permissions` (`ID`, `userID`, `roleID`) VALUES
 INSERT INTO `roles` (`ID`, `title`) VALUES
 (1, 'Admin'),
 (2, 'User');
+
+INSERT INTO `tasks` (`ID`, `title`, `userID`, `state`) VALUES
+(1, 'Website Design überarbeiten', 1, 'open'),
+(2, 'Kundensupport E-Mails beantworten', 1, 'in progress'),
+(3, 'Produktpräsentation für nächste Woche vorbereiten', 1, 'done'),
+(4, 'Neue Blogbeiträge verfassen', 2, 'open'),
+(5, 'Meeting mit dem Entwicklerteam', 2, 'in progress'),
+(6, 'Budgetplan für nächstes Quartal erstellen', 2, 'done');
 
 INSERT INTO `users` (`ID`, `username`, `password`) VALUES
 (1, 'admin1', '$2y$10$3uADXmuSRHQA5px8aQnvu.3NiElA2QgXr8haEevS/1sL.AuvOcvOC'),
