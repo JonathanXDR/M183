@@ -7,7 +7,7 @@ if (!isset($_COOKIE['userid'])) {
   exit();
 }
 
-$id = isset($_POST['id']) && $_POST['id'] !== "" ? $_POST['id'] : null;
+$id = isset($_POST['id']) && $_POST['id'] !== "" ? intval($_POST['id']) : null;
 require_once 'fw/db.php';
 
 if ($id !== null) {
@@ -22,7 +22,7 @@ require_once 'fw/header.php';
 if (isset($_POST['title']) && isset($_POST['state'])) {
   $state = $_POST['state'];
   $title = $_POST['title'];
-  $userid = $_COOKIE['userid'];
+  $userid = intval($_COOKIE['userid']);
 
   if ($id === null) {
     $logger->log('INFO', "New task created by user $userid: $title");

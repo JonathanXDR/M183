@@ -11,19 +11,40 @@ if (!isset($_COOKIE['username'])) {
     exit();
 }
 
-$conn = new mysqli($_ENV['DATABASE_HOST'], $_ENV['DATABASE_USER'], $_ENV['DATABASE_PASSWORD'], $_ENV['DATABASE_NAME'], $_ENV['DATABASE_PORT']);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+require_once '../fw/db.php';
+$conn = getConnection();
+if (!$conn) {
+    die("Datenbankverbindung fehlgeschlagen");
 }
-$stmt = $conn->prepare("SELECT users.ID, users.username, roles.title FROM users INNER JOIN permissions ON users.ID = permissions.userID INNER JOIN roles ON permissions.roleID = roles.ID ORDER BY username");
+
+$userid = isset($_COOKIE['userid']) ? intval($_COOKIE['userid']) : 0;
+$stmt = $conn->prepare("SELECT roleID FROM permissions WHERE userID = ?");
+$stmt->bind_param("i", $userid);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($db_id, $db_username, $db_title);
+if ($stmt->num_rows == 0) {
+    die("Zugriff verweigert");
+}
+
+$stmt->bind_result($roleID);
+$isAdmin = false;
+while ($stmt->fetch()) {
+    if ($roleID == 1) {
+        $isAdmin = true;
+        break;
+    }
+}
+if (!$isAdmin) {
+    die("Zugriff verweigert");
+}
+
+$stmt = $conn->prepare("SELECT users.ID, users.username, roles.title FROM users INNER JOIN permissions ON users.ID = permissions.userID INNER JOIN roles ON permissions.roleID = roles.ID ORDER BY username");
+$stmt->execute();
+$result = $stmt->get_result();
 
 $users = [];
-while ($stmt->fetch()) {
-    $users[] = ['id' => $db_id, 'username' => $db_username, 'title' => $db_title];
+while ($row = $result->fetch_assoc()) {
+    $users[] = ['id' => $row['ID'], 'username' => $row['username'], 'title' => $row['title']];
 }
 
 require_once '../fw/header.php';

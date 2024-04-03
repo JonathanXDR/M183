@@ -13,8 +13,9 @@ class ElasticSearchLogger
 
     public function __construct()
     {
+        $hosts = [$_ENV['ELASTICSEARCH_HOST'] . ':' . ($_ENV['ELASTICSEARCH_PORT'] ?? '9200')];
         $this->client = ClientBuilder::create()
-            ->setHosts([$_ENV['ELASTICSEARCH_HOST'] . ':' . $_ENV['ELASTICSEARCH_PORT']])
+            ->setHosts($hosts)
             ->setBasicAuthentication($_ENV['ELASTIC_USERNAME'], $_ENV['ELASTIC_PASSWORD'])
             ->build();
     }
@@ -22,7 +23,7 @@ class ElasticSearchLogger
     public function log($level, $message, $context = [])
     {
         $data = [
-            'index' => 'logs-' . date('d.m.Y'),
+            'index' => 'logs-' . date('Y.m.d'),
             'body' => [
                 'level' => $level,
                 'message' => $message,
@@ -30,7 +31,11 @@ class ElasticSearchLogger
                 'timestamp' => date('c'),
             ]
         ];
-        $this->client->index($data);
+        try {
+            $this->client->index($data);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
     }
 }
 ?>

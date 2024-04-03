@@ -1,30 +1,27 @@
 <?php
-if (!isset($_COOKIE['userid'])) {
-  header("Location: /");
-  exit();
+require_once 'fw/db.php';
+$conn = getConnection();
+if (!$conn) {
+  die("Connection failed: " . $conn->connect_error);
 }
-
-require_once 'fw/ElasticSearchLogger.php';
-$logger = new ElasticSearchLogger();
 
 $options = ["Open", "In Progress", "Done"];
 $title = "";
 $state = "";
 $taskid = "";
 
-if (isset($_GET['id'])) {
-  $taskid = $_GET["id"];
-  require_once 'fw/db.php';
-  $stmt = executeStatement("SELECT ID, title, state FROM tasks WHERE ID = ?", [$taskid]);
-
-  $logger->log('INFO', 'Fetching task for editing', ['task_id' => $taskid]);
-
-  if ($stmt->num_rows > 0) {
-    $stmt->bind_result($db_id, $db_title, $db_state);
-    $stmt->fetch();
-    $title = htmlspecialchars($db_title, ENT_QUOTES, 'UTF-8');
-    $state = $db_state;
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+  $taskid = intval($_GET["id"]);
+  $stmt = $conn->prepare("SELECT ID, title, state FROM tasks WHERE ID = ?");
+  $stmt->bind_param("i", $taskid);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $title = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
+    $state = $row['state'];
   }
+  $stmt->close();
 }
 
 require_once 'fw/header.php';
@@ -38,7 +35,7 @@ require_once 'fw/header.php';
   <input type="hidden" name="id" value="<?= htmlspecialchars($taskid, ENT_QUOTES, 'UTF-8') ?>" />
   <div class="form-group">
     <label for="title">Description</label>
-    <input type="text" class="form-control size-medium" name="title" id="title" value="<?= $title ?>">
+    <input type="text" class="form-control size-medium" name="title" id="title" value="<?= $title ?>" required>
   </div>
   <div class="form-group">
     <label for="state">State</label>
@@ -54,23 +51,6 @@ require_once 'fw/header.php';
     <input id="submit" type="submit" class="btn size-auto" value="Submit" />
   </div>
 </form>
-<script>
-  $(document).ready(function () {
-    $('#form').validate({
-      rules: {
-        title: {
-          required: true
-        }
-      },
-      messages: {
-        title: 'Please enter a description.',
-      },
-      submitHandler: function (form) {
-        form.submit();
-      }
-    });
-  });
-</script>
 
 <?php
 require_once 'fw/footer.php';

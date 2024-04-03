@@ -1,9 +1,7 @@
 <?php
-$id = 0;
-$roleid = 0;
 require_once 'db.php';
 $conn = getConnection();
-if (isset($_COOKIE['userid'])) {
+if ($conn && isset($_COOKIE['userid'])) {
     $userid = intval($_COOKIE['userid']);
     if ($stmt = $conn->prepare("SELECT users.id, roles.id, roles.title FROM users INNER JOIN permissions ON users.id = permissions.userid INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?")) {
         $stmt->bind_param("i", $userid);
@@ -11,8 +9,9 @@ if (isset($_COOKIE['userid'])) {
         $stmt->store_result();
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($db_userid, $db_roleid, $db_rolename);
-            $stmt->fetch();
-            $roleid = $db_roleid;
+            while ($stmt->fetch()) {
+                $roleid = $db_roleid;
+            }
         }
         $stmt->close();
     }
@@ -37,7 +36,7 @@ if (isset($_COOKIE['userid'])) {
             <nav>
                 <ul>
                     <li><a href="/">Tasks</a></li>
-                    <?php if ($roleid == 1) { ?>
+                    <?php if (isset($roleid) && $roleid == 1) { ?>
                         <li><a href="/admin/users.php">User List</a></li>
                     <?php } ?>
                     <li><a href="/logout.php">Logout</a></li>

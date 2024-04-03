@@ -38,20 +38,19 @@ require_once 'fw/db.php';
                     }
                 },
                 messages: {
-                    title: 'Please enter search terms.',
+                    terms: 'Please enter search terms.',
                 },
                 submitHandler: function (form) {
-                    provider = $("#searchurl").val();
-                    terms = $("#terms").val();
-                    userid = <?php echo htmlspecialchars($_COOKIE["userid"], ENT_QUOTES, 'UTF-8'); ?>;
+                    let provider = $("#searchurl").val();
+                    let terms = $("#terms").val();
+                    let userid =
+                        <?php echo htmlspecialchars($_COOKIE["userid"], ENT_QUOTES, 'UTF-8'); ?>;
                     $("#msg").show();
                     $("#result").html("");
-                    $.post("search.php", {
-                        provider: provider,
+                    $.post(provider, {
                         terms: terms,
                         userid: userid
                     }, function (data) {
-                        console.log(data);
                         $("#result").html(data);
                         $("#msg").hide(500);
                         $("#result").show(500);

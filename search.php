@@ -5,8 +5,8 @@ if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["user
    $logger->log('WARN', 'Search attempted with insufficient information.');
    exit("Not enough information provided");
 }
-$provider = htmlspecialchars($_POST["provider"]);
-$terms = htmlspecialchars($_POST["terms"]);
+$provider = htmlspecialchars($_POST["provider"], ENT_QUOTES, 'UTF-8');
+$terms = htmlspecialchars($_POST["terms"], ENT_QUOTES, 'UTF-8');
 $userid = intval($_POST["userid"]);
 sleep(1);
 $logger->log('INFO', "Search performed by user $userid: $terms", ['provider' => $provider]);
