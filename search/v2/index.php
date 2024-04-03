@@ -2,13 +2,15 @@
 require_once '../../fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (!isset($_GET["userid"]) || !isset($_GET["terms"])) {
-    $logger->log('ERROR', 'Search failed: Not enough information to search', ['userid' => $_GET['userid'] ?? 'N/A']);
+$userid = isset($_POST["userid"]);
+$terms = isset($_POST["terms"]);
+
+if (!$userid || !$terms) {
+    $logger->log('ERROR', 'Search failed: Not enough information to search', ['userid' => $userid]);
     die("Not enough information to search");
 }
 
-$userid = intval($_GET["userid"]);
-$terms = htmlspecialchars($_GET["terms"]);
+$terms = htmlspecialchars($terms);
 
 $logger->log('INFO', 'Search performed', ['userid' => $userid, 'terms' => $terms]);
 
