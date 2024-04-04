@@ -11,8 +11,11 @@ Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-
 3. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
 4. `composer install` ausführen
 5. `docker compose up -d` ausführen
-6. DB mit dem Namen `m183_lb2` erstellen
-7. Die [m183_lb2.sql](./m183_lb2.sql) Datei importieren
+
+6. Die Applikation sollte nun auf [http://localhost:80](http://localhost:80) aufrufbar sein
+
+7. Auf [http://localhost:5601](http://localhost:5601) können alle Elastic Services gefunden werden
+   - Username und Password ist `elastic`
 
 ## Security Fixes Documentation
 
