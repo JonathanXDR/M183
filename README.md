@@ -1,52 +1,44 @@
 # LB2 Applikation
 
-Diese Applikation ist bewusst unsicher programmiert und sollte nie in produktiven Umgebungen zum Einsatz kommen. Ziel der Applikation ist es, Lernende für mögliche Schwachstellen in Applikationen zu sensibilisieren, diese anzuleiten, wie die Schwachstellen aufgespürt und geschlossen werden können.
+Diese Applikation ist bewusst unsicher programmiert und dient dazu, uns Lernenden die Augen für potenzielle Sicherheitslücken in Softwareanwendungen zu öffnen. Wir lernen, wie wir diese Lücken erkennen und beheben können. Dieses Projekt ist Teil der LB2 im [Modul 183](https://gitlab.com/ch-tbz-it/Stud/m183/m183).
 
-Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-it/Stud/m183/m183) durch die Lernenden bearbeitet.
+## Applikation zum Laufen bringen
 
-## Applikation laufen lassen
+Um die Applikation zusammen mit Elasticsearch effizient zu nutzen, gehen wir wie folgt vor:
 
-1. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
-2. `docker compose up -d` ausführen
+1. **Vorbereitung der Umgebung**:
 
-3. Die Applikation sollte nun auf [http://localhost:80](http://localhost:80) aufrufbar sein
+   - Wir kopieren die Datei [.env.example](./.env.example) und benennen sie in `.env` um.
+   - Falls notwendig, passen wir die Einstellungen in der `.env` Datei an unsere Bedürfnisse an.
 
-4. Auf [http://localhost:5601](http://localhost:5601) können alle Elastic Services gefunden werden
-   - Username und Password ist `elastic`
+2. **Dienste starten**:
 
-## Security Fixes Documentation
+   - Die Dienste werden mit `docker compose up -d` gestartet.
+   - Anschliessend ist die Applikation unter [http://localhost:80](http://localhost:80) erreichbar.
+     ![Application](./img/application.png)
+   - Die Elastic Services sind unter [http://localhost:5601](http://localhost:5601) zu finden. Für den Login nutzen wir `elastic` als Benutzernamen und Passwort.
+     ![Elastic Login](./img/elastic-login.png)
 
-### Authentication and Authorization
+3. **Bei Zugriffsproblemen auf das Dashboard**:
 
-- **Unauthorised Access and Permission Verification:**
-  - **admin/users.php:** Improved authentication by checking if the user is logged in before accessing user-related features. Added permission checks to ensure only users with admin roles can access certain data. Utilized environment variables for sensitive information and implemented proper error logging with ElasticSearchLogger.
-  - **Various files:**
-    Ensured that all user actions require the user to be logged in by checking the existence of a valid php sessions in favor of cookies. Unauthorized attempts are logged and redirected to the login page. Added or improved checks for user roles where necessary to enforce proper authorization.
+   - Zeigt das Elastic Dashboard länger die Meldung `Kibana server is not ready yet.`, könnte dies auf ein Problem mit dem Passwort des `kibana_system` Benutzers hinweisen.
+   - Bei Zugriffsproblemen können wir mit folgendem Befehl ein neues Passwort setzen:
 
-### SQL Injection
+     ```
+     docker exec -it m183_lb2-elasticsearch-1 bin/elasticsearch-reset-password -u <username> -i <neues Passwort>
+     ```
 
-- **Prepared Statements:**
-  - **edit.php, savetask.php:** Switched from direct SQL queries to prepared statements to prevent SQL injection. Ensured that user input is properly sanitized before being used in database operations.
+   - Wichtig ist, dass der entsprechende Container, `m183_lb2-elasticsearch-1`, dabei läuft.
+   - Nach dem Zurücksetzen des Passworts müssen wir auch die Passwortvariablen in der `.env` Datei aktualisieren.
 
-### Cross-Site Scripting (XSS)
+4. **Nutzung von Elastic Search**:
 
-- **Output Encoding:**
-  - **admin/users.php, search/v2/index.php, user/backgroundsearch.php, user/tasklist.php:** Applied `htmlspecialchars` to user-generated content before echoing it back to the user, preventing potential XSS attacks by encoding special characters.
+   - Nach dem Login erhalten wir Zugriff auf das gesamte Elastic Dashboard und seine Services.
+     ![Elastic Overview](./img/elastic-overview.png)
+   - Wir beginnen mit dem `Search` Service, um Logs als Dokumente einzusehen.
+     ![Elastic Search](./img/elastic-search.png)
+   - Unter dem `Analytics` Service im Dashboard-Tab können wir dann eigene Dashboards für unsere Logs erstellen. Wichtig zu wissen ist, dass diese Dashboards nur auf dem persistenten Volume gespeichert werden. Daher muss jeder Benutzer seine Dashboards neu anlegen. Dieses Problem kann leider nicht ohne Weiteres umgangen werden.
+     ![Elastic Dashboards](./img/elastic-dashboards.png)
 
-### Sensitive Data Exposure
-
-- **Environment Variables:**
-  - **.env:** Introduced an `.env` file to store sensitive information such as database credentials and Elasticsearch credentials securely. Updated files to load sensitive data from environment variables instead of hardcoding them.
-  - **Dockerfile, compose.yaml:** Configured services to use environment variables for sensitive settings, ensuring that credentials are not exposed in the source code or docker configuration files.
-- **Password Hashing:**
-  - **Database:** Passwords stored in the database are now hashed. This measure significantly increases the security of stored passwords, making them resistant to theft even in the event of direct access to the database.
-
-### Logging and Monitoring
-
-- **Logging:**
-  - **fw/ElasticSearchLogger.php:** Implemented a centralized logging mechanism using Elasticsearch. All critical operations, errors, and warnings are now logged with appropriate context, improving the ability to monitor and react to potential security issues.
-
-### Code Quality and Security Best Practices
-
-- **General Code Improvements:**
-  - **Various Files:** Refactored code for better readability, maintainability, and security. Removed unused code and files, such as `config.php`, which was replaced by environment variables. Ensured consistent use of security practices across the application.
+5. **Interaktion erforderlich für Logs**:
+   - Wichtig: Logs in Elastic werden erst sichtbar, wenn mit der Applikation interagiert wurde. Das heisst, wir müssen bestimmte Aktionen in der Applikation ausführen, damit Logs generiert und in Elastic sichtbar werden.
