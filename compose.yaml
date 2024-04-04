@@ -24,6 +24,7 @@ services:
       - ${WEB_PORT}:${WEB_PORT}
     volumes:
       - .:/var/www/html
+      - /var/www/html/vendor
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
