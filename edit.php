@@ -1,8 +1,10 @@
 <?php
+session_start();
 require_once 'fw/db.php';
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
-$logger->log('INFO', 'Accessed edit task page.', ['userID' => $_COOKIE['userID'] ?? 'anonymous', 'taskID' => $_GET['id'] ?? 'new']);
+
+$logger->log('INFO', 'Accessed edit task page.', ['userID' => $_SESSION['userID'] ?? 'anonymous', 'taskID' => $_GET['id'] ?? 'new']);
 
 $conn = getConnection();
 if (!$conn) {

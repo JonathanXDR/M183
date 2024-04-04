@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $basePath = dirname(__DIR__, 1);
 require_once $basePath . '/vendor/autoload.php';
 require_once '../fw/ElasticSearchLogger.php';
@@ -8,7 +8,7 @@ $logger = new ElasticSearchLogger();
 $dotenv = Dotenv\Dotenv::createImmutable($basePath);
 $dotenv->load();
 
-if (!isset($_COOKIE['username'])) {
+if (!isset($_SESSION['username'])) {
     $logger->log('WARN', 'Unauthorised access attempt to users list');
     header("Location: ../login.php");
     exit();
@@ -21,7 +21,7 @@ if (!$conn) {
     die("Datenbankverbindung fehlgeschlagen");
 }
 
-$userID = isset($_COOKIE['userID']) ? intval($_COOKIE['userID']) : 0;
+$userID = isset($_SESSION['userID']) ? intval($_SESSION['userID']) : 0;
 $stmt = $conn->prepare("SELECT roleID FROM permissions WHERE userID = ?");
 $stmt->bind_param("i", $userID);
 $stmt->execute();

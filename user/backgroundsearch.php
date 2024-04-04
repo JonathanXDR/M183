@@ -2,13 +2,13 @@
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (!isset($_COOKIE['username'])) {
-    $logger->log('WARN', 'Unauthorized background search attempt', ['cookie' => $_COOKIE]);
+if (!isset($_SESSION['username'])) {
+    $logger->log('WARN', 'Unauthorized background search attempt', ['session' => $_SESSION]);
     header("Location: ../login.php");
     exit();
 }
 
-$username = $_COOKIE['username'];
+$username = $_SESSION['username'];
 $logger->log('INFO', 'Initiating background search', ['username' => $username]);
 
 require_once 'fw/db.php';
@@ -18,7 +18,7 @@ require_once 'fw/db.php';
     <form id="form" method="post" action="">
         <input type="hidden" id="searchurl" name="searchurl" value="/search/v2/" />
         <div class="form-group">
-            <label for="terms">terms</label>
+            <label for="terms">Terms</label>
             <input type="text" class="form-control size-medium" name="terms" id="terms">
         </div>
         <div class="form-group">
@@ -45,7 +45,7 @@ require_once 'fw/db.php';
                     let provider = $("#searchurl").val();
                     let terms = $("#terms").val();
                     let userID =
-                        <?php echo htmlspecialchars($_COOKIE["userID"], ENT_QUOTES, 'UTF-8'); ?>;
+                        <?php echo htmlspecialchars($_SESSION["userID"], ENT_QUOTES, 'UTF-8'); ?>;
                     $("#msg").show();
                     $("#result").html("");
                     $.post(provider, {

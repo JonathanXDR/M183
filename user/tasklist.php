@@ -8,7 +8,7 @@ if (!$conn) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$userID = isset($_COOKIE['userID']) ? intval($_COOKIE['userID']) : 0;
+$userID = isset($_SESSION['userID']) ? intval($_SESSION['userID']) : 0;
 $stmt = $conn->prepare("SELECT ID, title, state FROM tasks WHERE UserID = ?");
 $stmt->bind_param("i", $userID);
 $stmt->execute();

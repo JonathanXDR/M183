@@ -4,8 +4,8 @@ require_once 'ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
 $conn = getConnection();
-if ($conn && isset($_COOKIE['userID'])) {
-    $userID = intval($_COOKIE['userID']);
+if ($conn && isset($_SESSION['userID'])) {
+    $userID = intval($_SESSION['userID']);
     if ($stmt = $conn->prepare("SELECT users.id, roles.id, roles.title FROM users INNER JOIN permissions ON users.id = permissions.userID INNER JOIN roles ON permissions.roleID = roles.id WHERE users.id = ?")) {
         $stmt->bind_param("i", $userID);
         $stmt->execute();
@@ -36,7 +36,7 @@ if ($conn && isset($_COOKIE['userID'])) {
 <body>
     <header>
         <div>This is the insecure m183 test app</div>
-        <?php if (isset($_COOKIE['userID'])) { ?>
+        <?php if (isset($_SESSION['userID'])) { ?>
             <nav>
                 <ul>
                     <li><a href="/">Tasks</a></li>

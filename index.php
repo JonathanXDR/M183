@@ -1,14 +1,15 @@
 <?php
+session_start();
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (!isset($_COOKIE['username'])) {
+if (!isset($_SESSION['username'])) {
     $logger->log('WARN', 'Unauthorized access attempt to index.php');
     header("Location: login.php");
     exit();
 }
 
-$username = $_COOKIE['username'];
+$username = $_SESSION['username'];
 $logger->log('INFO', 'User accessed the index page.', ['username' => $username]);
 
 require_once 'fw/header.php';
@@ -18,8 +19,8 @@ require_once 'fw/header.php';
 </h2>
 
 <?php
-if (isset($_COOKIE['userID'])) {
-    $userID = $_COOKIE['userID'];
+if (isset($_SESSION['userID'])) {
+    $userID = $_SESSION['userID'];
     $logger->log('INFO', 'Displaying tasks and search for user.', ['username' => $username, 'userID' => $userID]);
     require_once 'user/tasklist.php';
     echo "<hr />";

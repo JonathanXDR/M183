@@ -1,15 +1,14 @@
 <?php
-
+session_start();
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (isset($_COOKIE['username'])) {
-    $logger->log('INFO', 'User logged out.', ['username' => $_COOKIE['username']]);
+if (isset($_SESSION['username'])) {
+    $logger->log('INFO', 'User logged out.', ['username' => $_SESSION['username']]);
+    $_SESSION = array();
+    session_destroy();
 }
 
-setcookie('username', '', time() - 3600, '/');
-setcookie('userID', '', time() - 3600, '/');
-
-header("Location: /");
+header("Location: login.php");
 exit();
 ?>

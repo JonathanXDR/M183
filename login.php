@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
@@ -22,8 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = $_POST['password'] ?? '';
 
         if (password_verify($password, $user['password'])) {
-            setcookie("username", $username, time() + (86400 * 30), "/");
-            setcookie("userID", $user['id'], time() + (86400 * 30), "/");
+            $_SESSION['userID'] = $user['id'];
+            $_SESSION['username'] = $username;
+
             $logger->log('INFO', 'Login successful', ['username' => $username]);
             header("Location: index.php");
             exit();

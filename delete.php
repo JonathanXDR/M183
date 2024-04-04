@@ -1,15 +1,16 @@
 <?php
+session_start();
 require_once 'fw/db.php';
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
 
-if (!isset($_COOKIE['userID'])) {
+if (!isset($_SESSION['userID'])) {
     $logger->log('WARN', 'Unauthorized attempt to access delete.php.');
     header("Location: login.php");
     exit();
 }
 
-$userID = intval($_COOKIE['userID']);
+$userID = intval($_SESSION['userID']);
 $taskId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 $logger->log('INFO', 'Delete operation initiated.', ['userID' => $userID, 'taskID' => $taskId]);

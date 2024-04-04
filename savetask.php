@@ -1,7 +1,9 @@
 <?php
+session_start();
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
-if (!isset($_COOKIE['userID'])) {
+
+if (!isset($_SESSION['userID'])) {
   $logger->log('WARN', 'Unauthorized attempt to save a task.');
   header("Location: /");
   exit();
@@ -34,7 +36,7 @@ require_once 'fw/header.php';
 if (isset($_POST['title']) && isset($_POST['state'])) {
   $state = $_POST['state'];
   $title = $_POST['title'];
-  $userID = intval($_COOKIE['userID']);
+  $userID = intval($_SESSION['userID']);
 
   if ($id === null) {
     $logger->log('INFO', "Attempting to create a new task", ['userID' => $userID, 'title' => $title]);
