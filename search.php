@@ -1,10 +1,13 @@
 <?php
+session_start();
 require_once 'fw/ElasticSearchLogger.php';
 $logger = new ElasticSearchLogger();
+
 if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["userID"])) {
    $logger->log('WARN', 'Search attempted with insufficient information.', ['POST' => $_POST]);
    exit("Not enough information provided");
 }
+
 $provider = htmlspecialchars($_POST["provider"], ENT_QUOTES, 'UTF-8');
 $terms = htmlspecialchars($_POST["terms"], ENT_QUOTES, 'UTF-8');
 $userID = intval($_POST["userID"]);
