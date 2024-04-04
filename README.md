@@ -6,15 +6,12 @@ Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-
 
 ## Applikation laufen lassen
 
-1. [PHP installieren](https://www.php.net/manual/en/install.php), falls noch nicht vorhanden
-2. Den [PHP Composer installieren](https://getcomposer.org/download), falls noch nicht vorhanden
-3. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
-4. `composer install` ausführen
-5. `docker compose up -d` ausführen
+1. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
+2. `docker compose up -d` ausführen
 
-6. Die Applikation sollte nun auf [http://localhost:80](http://localhost:80) aufrufbar sein
+3. Die Applikation sollte nun auf [http://localhost:80](http://localhost:80) aufrufbar sein
 
-7. Auf [http://localhost:5601](http://localhost:5601) können alle Elastic Services gefunden werden
+4. Auf [http://localhost:5601](http://localhost:5601) können alle Elastic Services gefunden werden
    - Username und Password ist `elastic`
 
 ## Security Fixes Documentation
