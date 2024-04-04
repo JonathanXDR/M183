@@ -13,6 +13,7 @@ services:
       MYSQL_UNIX_PORT: ${DATABASE_PORT}
     volumes:
       - mariadb_data:/var/lib/mysql
+      - ./m183_lb2.sql:/docker-entrypoint-initdb.d/init.sql
 
   web:
     build: .
