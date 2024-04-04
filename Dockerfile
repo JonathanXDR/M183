@@ -16,4 +16,4 @@ RUN composer install \
     --no-dev \
     --prefer-dist
 
-EXPOSE 80
+EXPOSE ${WEB_PORT}
