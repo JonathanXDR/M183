@@ -7,10 +7,11 @@ Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-
 ## Applikation laufen lassen
 
 1. DB mit dem Namen `m183_lb2` erstellen
-2. Die [m183_lb2.sql](./m183_lb2.sql) SQL Datei importieren
-3. Den PHP Composer lokal installieren, falls noch nicht vorhanden
-4. `composer install` ausführen
-5. `docker compose up -d` ausführen
+2. Die [m183_lb2.sql](./m183_lb2.sql) Datei importieren
+3. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
+4. Den PHP Composer lokal installieren, falls noch nicht vorhanden
+5. `composer install` ausführen
+6. `docker compose up -d` ausführen
 
 ## Security Fixes Documentation
 
@@ -18,7 +19,7 @@ Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-
 
 - **Unauthorised Access and Permission Verification:**
   - **admin/users.php:** Improved authentication by checking if the user is logged in before accessing user-related features. Added permission checks to ensure only users with admin roles can access certain data. Utilized environment variables for sensitive information and implemented proper error logging with ElasticSearchLogger.
-  - **Various Files:**
+  - **Various files:**
     Ensured that all user actions require the user to be logged in by checking the existence of a valid php sessions in favor of cookies. Unauthorized attempts are logged and redirected to the login page. Added or improved checks for user roles where necessary to enforce proper authorization.
 
 ### SQL Injection
