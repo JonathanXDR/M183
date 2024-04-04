@@ -4,9 +4,13 @@ Diese Applikation ist bewusst unsicher programmiert und sollte nie in produktive
 
 Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-it/Stud/m183/m183) durch die Lernenden bearbeitet.
 
-## Hinweise zur Installation
+## Applikation laufen lassen
 
-Bevor mit `docker compose up` die Applikation gestartet wird, muss der Source-Pfad für's Volume an Ihre Umgebung angepasst werden (dass die todo-list-Applikation auch korrekt in den Container rein gelinkt wird). Wichtig: die DB wird nicht automatisch erzeugt. Verbinden Sie sich dafür mit einem SQL-Client Ihrer Wahl auf den Datenbankcontainer (localhost port 3306) und verwenden Sie [m183_lb2.sql](./m183_lb2.sql), um die Datenbank / Datenstruktur zu erzeugen. Beachten Sie, dass die Datenbank nach einem "neu bauen" des Containers wieder weg sein wird und Sie diese nochmals anlegen müssten.
+1. DB mit dem Namen `m183_lb2` erstellen
+2. Die [m183_lb2.sql](./m183_lb2.sql) SQL Datei importieren
+3. Den PHP Composer lokal installieren, falls noch nicht vorhanden
+4. `composer install` ausführen
+5. `docker compose up -d` ausführen
 
 ## Security Fixes Documentation
 
@@ -14,11 +18,12 @@ Bevor mit `docker compose up` die Applikation gestartet wird, muss der Source-Pf
 
 - **Unauthorised Access and Permission Verification:**
   - **admin/users.php:** Improved authentication by checking if the user is logged in before accessing user-related features. Added permission checks to ensure only users with admin roles can access certain data. Utilized environment variables for sensitive information and implemented proper error logging with ElasticSearchLogger.
-  - **Various Files:** Ensured that all user actions require the user to be logged in by checking the existence of a valid session cookie. Unauthorized attempts are logged and redirected to the login page. Added or improved checks for user roles where necessary to enforce proper authorization.
+  - **Various Files:**
+    Ensured that all user actions require the user to be logged in by checking the existence of a valid php sessions in favor of cookies. Unauthorized attempts are logged and redirected to the login page. Added or improved checks for user roles where necessary to enforce proper authorization.
 
 ### SQL Injection
 
-- **Use of Prepared Statements:**
+- **Prepared Statements:**
   - **edit.php, savetask.php:** Switched from direct SQL queries to prepared statements to prevent SQL injection. Ensured that user input is properly sanitized before being used in database operations.
 
 ### Cross-Site Scripting (XSS)
@@ -28,7 +33,7 @@ Bevor mit `docker compose up` die Applikation gestartet wird, muss der Source-Pf
 
 ### Sensitive Data Exposure
 
-- **Use of Environment Variables for Sensitive Information:**
+- **Environment Variables:**
   - **.env:** Introduced an `.env` file to store sensitive information such as database credentials and Elasticsearch credentials securely. Updated files to load sensitive data from environment variables instead of hardcoding them.
   - **Dockerfile, compose.yaml:** Configured services to use environment variables for sensitive settings, ensuring that credentials are not exposed in the source code or docker configuration files.
 - **Password Hashing:**
@@ -36,7 +41,7 @@ Bevor mit `docker compose up` die Applikation gestartet wird, muss der Source-Pf
 
 ### Logging and Monitoring
 
-- **ElasticSearchLogger Implementation:**
+- **Logging:**
   - **fw/ElasticSearchLogger.php:** Implemented a centralized logging mechanism using Elasticsearch. All critical operations, errors, and warnings are now logged with appropriate context, improving the ability to monitor and react to potential security issues.
 
 ### Code Quality and Security Best Practices
