@@ -10,6 +10,8 @@ $terms = htmlspecialchars($_POST["terms"], ENT_QUOTES, 'UTF-8');
 $userID = intval($_POST["userID"]);
 $logger->log('INFO', "Search initiated", ['provider' => $provider, 'terms' => $terms, 'userID' => $userID]);
 
+sleep(1);
+
 function callAPI($method, $url, $data)
 {
    $logger = new ElasticSearchLogger();

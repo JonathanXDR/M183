@@ -6,12 +6,12 @@ Die Applikation wird im Rahmen der LB2 im [Modul 183](https://gitlab.com/ch-tbz-
 
 ## Applikation laufen lassen
 
-1. DB mit dem Namen `m183_lb2` erstellen
-2. Die [m183_lb2.sql](./m183_lb2.sql) Datei importieren
-3. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
-4. Den PHP Composer lokal installieren, falls noch nicht vorhanden
-5. `composer install` ausführen
-6. `docker compose up -d` ausführen
+1. Die [.env.example](./.env.example) Datei duplizieren und zu `.env` umbenennen
+2. Den PHP Composer lokal installieren, falls noch nicht vorhanden
+3. `composer install` ausführen
+4. `docker compose up -d` ausführen
+5. DB mit dem Namen `m183_lb2` erstellen
+6. Die [m183_lb2.sql](./m183_lb2.sql) Datei importieren
 
 ## Security Fixes Documentation
 
