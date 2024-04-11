@@ -14,6 +14,7 @@ Um die Applikation zusammen mit Elasticsearch effizient zu nutzen, gehen wir wie
 2. **Dienste starten**:
 
    - Die Dienste werden mit `docker compose up -d` gestartet.
+     - Falls die Applikation aus irgend einem Grund nicht laufen sollte, kann es daran liegen, dass die Images nochmal neu gebaut werden müssen. In diesem fall kann `docker compose up -d --build` ausgeführt werden, um das zu tun.
    - Anschliessend ist die Applikation unter [http://localhost:80](http://localhost:80) erreichbar.
      ![Application](./img/application.png)
    - Die Elastic Services sind unter [http://localhost:5601](http://localhost:5601) zu finden. Für den Login nutzen wir `elastic` als Benutzernamen und Passwort.
